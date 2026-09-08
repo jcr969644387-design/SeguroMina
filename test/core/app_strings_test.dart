@@ -2,10 +2,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:seguromina/core/l10n/app_strings.dart';
 
 void main() {
-  const strings = AppStrings(<String, String>{
-    'home.title': 'SeguroMina',
-    'progress.summary': 'Identificaste {vistos} de {total} peligros',
-  }, 'es');
+  const strings = AppStrings(
+    <String, String>{
+      'home.title': 'SeguroMina',
+      'progress.summary': 'Identificaste {vistos} de {total} peligros',
+    },
+    'es',
+  );
 
   test('devuelve el texto de una clave existente', () {
     expect(strings('home.title'), 'SeguroMina');

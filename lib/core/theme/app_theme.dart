@@ -95,7 +95,7 @@ abstract final class AppTheme {
           ),
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: scheme.surfaceContainerHighest,
         elevation: 0,
         margin: EdgeInsets.zero,
