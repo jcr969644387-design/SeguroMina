@@ -1,0 +1,31 @@
+{
+  "app.name": "SeguroMina",
+  "app.tagline": "Entrena tu criterio antes de bajar a la mina",
+
+  "home.title": "SeguroMina",
+  "home.subtitle": "Identifica peligros, evalúa el riesgo y decide los controles.",
+  "home.start": "Empezar",
+  "home.continue": "Continuar",
+
+  "content.noticeTitle": "Contenido en revisión",
+  "content.noticeBody": "Los escenarios de esta versión aún no han sido validados por un especialista en seguridad minera. Úsalos como práctica académica, no como referencia normativa.",
+  "content.sourceLabel": "Fuente normativa",
+
+  "common.retry": "Reintentar",
+  "common.next": "Siguiente",
+  "common.back": "Volver",
+  "common.close": "Cerrar",
+  "common.loading": "Cargando",
+
+  "error.contentTitle": "No se pudo cargar el contenido",
+  "error.contentBody": "Un escenario está mal formado o falta en la instalación. Reinstala la aplicación desde su origen.",
+  "error.storageTitle": "No se pudo guardar tu progreso",
+  "error.storageBody": "El almacenamiento del dispositivo no respondió. Tu último intento puede no haberse registrado.",
+
+  "settings.title": "Ajustes",
+  "settings.theme": "Apariencia",
+  "settings.themeSystem": "Según el sistema",
+  "settings.themeLight": "Claro",
+  "settings.themeDark": "Oscuro",
+  "settings.textSize": "Tamaño del texto"
+}
