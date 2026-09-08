@@ -58,7 +58,13 @@ abstract final class AppColors {
   static const Color riskMedium = Color(0xFFE67E22);
 
   /// Riesgo bajo.
-  static const Color riskLow = Color(0xFF27AE60);
+  ///
+  /// Verde más oscuro que [accent]. Con el verde de marca (0xFF27AE60) la
+  /// luminancia relativa era 0.316, prácticamente idéntica a la del naranja
+  /// de riesgo medio (0.319): en escala de grises, y para quien tiene
+  /// deuteranopía, "medio" y "bajo" eran el mismo color. Este tono se coloca
+  /// entre el rojo y el naranja, a más de 0.08 de luminancia de cada uno.
+  static const Color riskLow = Color(0xFF1A9752);
 
   // --- Estados de la retroalimentación en escena ---
 
