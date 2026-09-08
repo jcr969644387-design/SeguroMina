@@ -32,7 +32,9 @@ class AppStrings {
   }
 
   static Future<AppStrings> load(String locale) async {
-    final raw = await rootBundle.loadString('${AppConstants.i18nPath}/$locale.json');
+    final raw = await rootBundle.loadString(
+      '${AppConstants.i18nPath}/$locale.json',
+    );
     final decoded = jsonDecode(raw) as Map<String, dynamic>;
     final values = decoded.map(
       (key, value) => MapEntry(key, value.toString()),
