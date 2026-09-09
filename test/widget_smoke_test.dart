@@ -117,8 +117,12 @@ void main() {
     );
     await _skipSplash(tester);
 
-    // Lo que se comprueba aqui es que el aviso convive con el resto del
-    // centro de entrenamiento en vez de ocupar la pantalla entera.
+    // Dos cosas a la vez, y las dos importan. Que el aviso convive con el
+    // resto del centro de entrenamiento en vez de ocupar la pantalla entera,
+    // y que se ve sin desplazar: `find` ignora lo que queda fuera del
+    // viewport, asi que si alguien lo empuja hacia el final de la lista este
+    // test falla. Es lo que se quiere: un aviso que hay que ir a buscar no
+    // cumple su funcion.
     expect(find.textContaining('fines educativos'), findsOneWidget);
     expect(find.text('Tu progreso'), findsOneWidget);
 

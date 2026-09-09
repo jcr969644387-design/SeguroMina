@@ -84,6 +84,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             const SizedBox(height: AppSpacing.lg),
             ProgressPanel(strings: strings, flow: flow),
+            // El aviso academico va arriba, dentro de la primera pantalla.
+            // Al final del desplazamiento, detras de cinco fichas de
+            // escenario, no lo leeria nadie: dejaria de ser un aviso y
+            // pasaria a ser una formalidad escondida.
+            if (showNotice) ...<Widget>[
+              const SizedBox(height: AppSpacing.md),
+              AcademicNoticeCard(
+                strings: strings,
+                onUnderstood: () => setState(() => _noticeDismissed = true),
+                onNeverShow: () {
+                  unawaited(
+                    ref.read(appFlowProvider.notifier).hideAcademicNotice(),
+                  );
+                },
+              ),
+            ],
             const SizedBox(height: AppSpacing.lg),
             Text(
               strings('home.continueTitle'),
@@ -118,18 +134,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               introCompleted: flow.hasCompletedIntro,
               onOpenIntro: () => unawaited(_open(const IntroMissionScreen())),
             ),
-            if (showNotice) ...<Widget>[
-              const SizedBox(height: AppSpacing.lg),
-              AcademicNoticeCard(
-                strings: strings,
-                onUnderstood: () => setState(() => _noticeDismissed = true),
-                onNeverShow: () {
-                  unawaited(
-                    ref.read(appFlowProvider.notifier).hideAcademicNotice(),
-                  );
-                },
-              ),
-            ],
             const SizedBox(height: AppSpacing.lg),
             Text(
               '${strings('content.sourceLabel')}: ${NormativeSource.full}',
