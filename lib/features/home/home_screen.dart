@@ -1,141 +1,146 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/brand/seguromina_mark.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/flow/app_flow_controller.dart';
 import '../../core/l10n/app_strings.dart';
-import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
+import '../../domain/training/intro_mission.dart';
+import '../mission/intro_mission_screen.dart';
+import '../placeholder/coming_soon_screen.dart';
+import 'widgets/academic_notice_card.dart';
+import 'widgets/hero_mission_card.dart';
+import 'widgets/level_badge.dart';
+import 'widgets/module_grid.dart';
 
-/// Pantalla de entrada.
+/// Centro de entrenamiento.
 ///
-/// Provisional: en el Módulo 5 la reemplaza el catálogo de escenarios. Existe
-/// ahora para verificar que el tema, el escalado de texto y la carga de
-/// textos externos funcionan de extremo a extremo.
-class HomeScreen extends ConsumerWidget {
+/// El orden de la pantalla es deliberado: primero quien eres y como vas,
+/// despues la mision que puedes empezar ahora, y solo al final el resto de
+/// modulos. Lo que se espera del estudiante ocupa el centro.
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final strings = ref.watch(appStringsProvider);
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  /// Descarte de la sesion actual. El descarte permanente vive en el
+  /// repositorio de preferencias.
+  bool _noticeDismissed = false;
+
+  Future<void> _openMission() async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (context) => const IntroMissionScreen(),
+      ),
+    );
+  }
+
+  Future<void> _openModule(HomeModule module) async {
+    if (module == HomeModule.scenarios) {
+      await _openMission();
+      return;
+    }
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (context) => ComingSoonScreen(titleKey: module.titleKey),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final flow = ref.watch(appFlowProvider);
+    final strings = ref.watch(appStringsProvider).valueOrNull;
+
+    if (strings == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    final showNotice = !flow.hidesAcademicNotice && !_noticeDismissed;
 
     return Scaffold(
       body: SafeArea(
-        child: strings.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => _StartupError(error: error),
-          data: (s) => _HomeContent(strings: s),
-        ),
-      ),
-    );
-  }
-}
-
-class _HomeContent extends StatelessWidget {
-  const _HomeContent({required this.strings});
-
-  final AppStrings strings;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const Spacer(),
-          Text(strings('app.name'), style: theme.textTheme.displaySmall),
-          const SizedBox(height: AppSpacing.sm),
-          Text(strings('app.tagline'), style: theme.textTheme.bodyLarge),
-          const SizedBox(height: AppSpacing.xl),
-          if (ContentValidation.requiresNotice)
-            _ValidationNotice(strings: strings),
-          const Spacer(),
-          Text(
-            '${strings('content.sourceLabel')}: ${NormativeSource.full}',
-            style: theme.textTheme.bodySmall,
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            AppSpacing.md,
+            AppSpacing.lg,
+            AppSpacing.xxl,
           ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Aviso de contenido no validado.
-///
-/// Se muestra mientras ningún especialista haya firmado la revisión. No es
-/// decorativo: enseñar criterios de seguridad sin respaldo profesional es un
-/// riesgo formativo y el estudiante tiene derecho a saberlo.
-class _ValidationNotice extends StatelessWidget {
-  const _ValidationNotice({required this.strings});
-
-  final AppStrings strings;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Semantics(
-      container: true,
-      child: Container(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          color: AppColors.secondary.withValues(alpha: 0.18),
-          border: const Border(
-            left: BorderSide(color: AppColors.secondary, width: 4),
-          ),
-          borderRadius: const BorderRadius.horizontal(
-            right: Radius.circular(AppSpacing.radius),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            Row(
+              children: <Widget>[
+                const SeguroMinaMark(size: 44),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        AppConstants.appName,
+                        style: theme.textTheme.headlineSmall,
+                      ),
+                      Text(
+                        strings('home.greeting'),
+                        style: theme.textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: LevelBadge(
+                label: strings(flow.level.labelKey),
+                points: strings.format(
+                  'home.pointsLabel',
+                  <String, Object?>{'puntos': flow.points},
+                ),
+                progress: flow.levelProgress,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            HeroMissionCard(
+              mission: IntroMission.definition,
+              strings: strings,
+              completed: flow.hasCompletedIntro,
+              onStart: _openMission,
+            ),
+            if (showNotice) ...<Widget>[
+              const SizedBox(height: AppSpacing.md),
+              AcademicNoticeCard(
+                strings: strings,
+                onUnderstood: () => setState(() => _noticeDismissed = true),
+                onNeverShow: () {
+                  unawaited(
+                    ref.read(appFlowProvider.notifier).hideAcademicNotice(),
+                  );
+                },
+              ),
+            ],
+            const SizedBox(height: AppSpacing.lg),
             Text(
-              strings('content.noticeTitle'),
+              strings('home.quickAccess'),
               style: theme.textTheme.titleMedium,
             ),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.md),
+            ModuleGrid(strings: strings, onOpen: _openModule),
+            const SizedBox(height: AppSpacing.lg),
             Text(
-              strings('content.noticeBody'),
-              style: theme.textTheme.bodyMedium,
+              '${strings('content.sourceLabel')}: ${NormativeSource.full}',
+              style: theme.textTheme.bodySmall,
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _StartupError extends StatelessWidget {
-  const _StartupError({required this.error});
-
-  final Object error;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'No se pudo cargar el archivo de textos',
-            style: theme.textTheme.headlineSmall,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            'Revisa que assets/i18n/${AppConstants.defaultLocale}.json esté '
-            'declarado en pubspec.yaml.',
-            style: theme.textTheme.bodyLarge,
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Text('$error', style: theme.textTheme.bodySmall),
-        ],
       ),
     );
   }

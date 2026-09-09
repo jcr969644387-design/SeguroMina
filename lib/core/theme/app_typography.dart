@@ -7,6 +7,16 @@ import 'package:flutter/material.dart';
 /// fuera de esta escala: el escalado de texto es un requisito de
 /// accesibilidad del proyecto, no una preferencia.
 abstract final class AppTypography {
+  /// Familia tipografica de la app.
+  ///
+  /// La direccion de diseno pide Inter. No se puede activar todavia: la app
+  /// es offline-first y google_fonts descargaria la familia en ejecucion,
+  /// asi que hay que empaquetar los .ttf en assets/fonts/ y declararlos en
+  /// pubspec.yaml. Hasta entonces se usa la tipografia del sistema, que en
+  /// Android es Roboto. Cambiar esta constante a 'Inter' activa la familia
+  /// en toda la app de una sola vez.
+  static const String? fontFamily = null;
+
   /// Título de pantalla. Uso escaso: una vez por pantalla como máximo.
   static const TextStyle display = TextStyle(
     fontSize: 28,

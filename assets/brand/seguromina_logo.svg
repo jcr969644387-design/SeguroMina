@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="SeguroMina">
+  <title>SeguroMina</title>
+  <!-- Escudo: proteccion. Silueta angular y vertical, sin geometria radial. -->
+  <path d="M14 8 H50 Q54 8 54 12 V30 C54 45 45 55 32 60 C19 55 10 45 10 30 V12 Q10 8 14 8 Z" fill="#2E5C8A"/>
+  <!-- Casco minero: el oficio. -->
+  <path d="M20 33 C20 20 44 20 44 33 Z" fill="#F4C430"/>
+  <rect x="16" y="32.4" width="32" height="4.6" rx="2.3" fill="#F4C430"/>
+  <!-- Lampara de casco, que hace de ojo de inspeccion. -->
+  <circle cx="32" cy="26.5" r="3.6" fill="#2C3E50"/>
+  <circle cx="30.9" cy="25.4" r="1.15" fill="#FFFFFF"/>
+  <!-- Check: la decision validada. -->
+  <path d="M23 45 L29.5 51.3 L43 40" fill="none" stroke="#FFFFFF" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
