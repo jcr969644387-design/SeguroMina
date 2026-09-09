@@ -57,7 +57,7 @@ void main() {
   });
 
   test('existen los textos de la mision de entrada', () {
-    final mission = IntroMission.definition;
+    const mission = IntroMission.definition;
     expectKey(mission.titleKey);
     expectKey(mission.briefingKey);
 

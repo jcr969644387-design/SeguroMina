@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:seguromina/domain/training/hazard.dart';
 import 'package:seguromina/domain/training/intro_mission.dart';
 import 'package:seguromina/domain/training/mission_scoring.dart';
 
