@@ -16,3 +16,12 @@ linux/
 windows/
 *.g.dart
 *.freezed.dart
+
+# Firma de la aplicacion. Un keystore filtrado permite publicar
+# actualizaciones falsas de SeguroMina y no se puede revocar.
+*.jks
+*.keystore
+*.p12
+key.properties
+keystore.b64
+dist/

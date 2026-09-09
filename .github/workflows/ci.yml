@@ -3,6 +3,7 @@ name: CI
 on:
   push:
     branches: [main, develop]
+    tags: ['v*']
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -38,9 +39,16 @@ jobs:
           path: coverage/lcov.info
 
   build-apk:
-    name: Construir APK
+    name: Construir APK release
     needs: verify
     runs-on: ubuntu-latest
+    env:
+      # applicationId y namespace del paquete Android. Se pasa a
+      # `flutter create` para no quedarse con el com.example por defecto, que
+      # Play rechaza y que ademas delata un proyecto sin configurar.
+      # Cambiar por el dominio propio ANTES de la primera publicacion: el
+      # applicationId no se puede modificar una vez subido a Play.
+      APP_ORG: pe.seguromina
     steps:
       - uses: actions/checkout@v4
 
@@ -57,17 +65,184 @@ jobs:
       - name: Instalar dependencias
         run: flutter pub get
 
-      # El proyecto se versiona sin la carpeta android/ generada, para que el
-      # repositorio contenga solo codigo propio. Se regenera en cada build.
-      - name: Generar plataforma Android
-        run: flutter create --platforms=android .
+      # Un solo origen de verdad para la version. El nombre del archivo se
+      # deriva de pubspec.yaml, de modo que no puede desviarse de la version
+      # que el APK declara por dentro.
+      - name: Leer la version de pubspec.yaml
+        id: version
+        run: |
+          set -euo pipefail
+          raw="$(grep -m1 '^version:' pubspec.yaml | awk '{print $2}')"
+          name="${raw%%+*}"
+          code="${raw##*+}"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          echo "apk=SeguroMina-v$name-release.apk" >> "$GITHUB_OUTPUT"
+          echo "versionName=$name / versionCode=$code"
 
-      - name: Construir APK de depuracion
-        run: flutter build apk --debug
+      # El repositorio se versiona sin la carpeta android/ generada, para que
+      # contenga solo codigo propio. Se regenera en cada build.
+      - name: Generar plataforma Android
+        run: |
+          flutter create --platforms=android --org "$APP_ORG" \
+            --project-name seguromina .
+
+      - name: Compilar APK release
+        run: flutter build apk --release
+
+      - name: Anadir build-tools al PATH
+        run: |
+          set -euo pipefail
+          tools="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)"
+          echo "Usando $tools"
+          echo "$tools" >> "$GITHUB_PATH"
+
+      # Sin el keystore no se puede firmar. En un tag eso es un error; en una
+      # rama se avisa y se publica el APK sin firmar, marcado como tal, para
+      # no bloquear el desarrollo de quien no tenga los secrets.
+      - name: Comprobar el keystore
+        id: keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          set -euo pipefail
+          if [ -z "${KEYSTORE_BASE64:-}" ]; then
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Falta ANDROID_KEYSTORE_BASE64: el APK no se firmara."
+          else
+            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/keystore.jks"
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Firmar el APK
+        if: steps.keystore.outputs.present == 'true'
+        env:
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          APK_NAME: ${{ steps.version.outputs.apk }}
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          src=build/app/outputs/flutter-apk/app-release.apk
+
+          # Flutter firma el release con la clave de depuracion cuando el
+          # proyecto no trae signingConfig propio. Esas entradas hay que
+          # quitarlas: si quedan, el dispositivo rechaza la instalacion por
+          # firma inconsistente.
+          cp "$src" "$RUNNER_TEMP/unsigned.apk"
+          zip -q -d "$RUNNER_TEMP/unsigned.apk" \
+            'META-INF/*.SF' 'META-INF/*.RSA' 'META-INF/*.DSA' \
+            'META-INF/*.EC' 'META-INF/MANIFEST.MF' || true
+
+          # zipalign debe ejecutarse antes de firmar: apksigner no realinea.
+          zipalign -p -f 4 "$RUNNER_TEMP/unsigned.apk" "$RUNNER_TEMP/aligned.apk"
+
+          apksigner sign \
+            --ks "$RUNNER_TEMP/keystore.jks" \
+            --ks-pass env:KS_PASS \
+            --ks-key-alias "$KEY_ALIAS" \
+            --key-pass env:KEY_PASS \
+            --out "dist/$APK_NAME" \
+            "$RUNNER_TEMP/aligned.apk"
+
+      - name: Copiar el APK sin firmar
+        if: steps.keystore.outputs.present != 'true'
+        env:
+          APK_NAME: ${{ steps.version.outputs.apk }}
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          cp build/app/outputs/flutter-apk/app-release.apk \
+            "dist/${APK_NAME%-release.apk}-SIN-FIRMAR.apk"
+
+      # Comprobaciones sobre el APK que se va a publicar, no sobre lo que se
+      # espera haber construido. Si alguna falla, el artefacto no sale.
+      - name: Verificar el APK
+        if: steps.keystore.outputs.present == 'true'
+        env:
+          APK_NAME: ${{ steps.version.outputs.apk }}
+          EXPECTED_NAME: ${{ steps.version.outputs.name }}
+          EXPECTED_CODE: ${{ steps.version.outputs.code }}
+        run: |
+          set -euo pipefail
+          apk="dist/$APK_NAME"
+
+          echo "--- Certificados ---"
+          apksigner verify --verbose --print-certs "$apk"
+
+          echo "--- La firma incluye el esquema v2 ---"
+          # apksigner devuelve 0 aunque solo exista firma v1, que Android 11+
+          # ya no acepta para instalaciones nuevas.
+          apksigner verify --verbose "$apk" \
+            | grep -q '(APK Signature Scheme v2): true'
+
+          echo "--- No esta firmado con la clave de depuracion ---"
+          if apksigner verify --print-certs "$apk" | grep -q 'CN=Android Debug'; then
+            echo "::error::El APK esta firmado con la clave de depuracion."
+            exit 1
+          fi
+
+          echo "--- No es depurable ---"
+          if aapt dump badging "$apk" | grep -q 'application-debuggable'; then
+            echo "::error::El APK declara android:debuggable."
+            exit 1
+          fi
+
+          echo "--- Metadatos coherentes con pubspec.yaml ---"
+          badging="$(aapt dump badging "$apk")"
+          echo "$badging" | grep -E "^package:"
+          echo "$badging" | grep -q "versionName='$EXPECTED_NAME'"
+          echo "$badging" | grep -q "versionCode='$EXPECTED_CODE'"
+
+          if echo "$badging" | grep -q "package: name='com.example"; then
+            echo "::error::El applicationId sigue siendo com.example."
+            exit 1
+          fi
+
+          echo "APK release firmado y verificado: $APK_NAME"
+
+      # En un tag el APK es lo que se distribuye: sin firma no se publica.
+      - name: Exigir firma en las etiquetas de version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          if [ "${{ steps.keystore.outputs.present }}" != "true" ]; then
+            echo "::error::Una etiqueta de version no puede publicar un APK sin firmar."
+            exit 1
+          fi
 
       - name: Publicar APK
         uses: actions/upload-artifact@v4
         with:
-          name: seguromina-debug-apk
-          path: build/app/outputs/flutter-apk/app-debug.apk
-          retention-days: 14
+          name: seguromina-apk
+          path: dist/*.apk
+          retention-days: 30
+          if-no-files-found: error
+
+  release:
+    name: Publicar Release
+    needs: build-apk
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: seguromina-apk
+          path: dist
+
+      # Una Release da una URL HTTPS estable y publica. Chrome sigue pudiendo
+      # avisar de que el archivo es poco frecuente —eso depende de la
+      # reputacion de descarga, no de la firma—, pero el aviso es mucho menor
+      # que al repartir el .zip de un artefacto de Actions.
+      - name: Crear la Release con el APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          gh release create "${{ github.ref_name }}" dist/*.apk \
+            --title "SeguroMina ${{ github.ref_name }}" \
+            --generate-notes
