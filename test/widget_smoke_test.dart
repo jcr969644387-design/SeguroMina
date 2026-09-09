@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui' show Size;
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:seguromina/app.dart';
@@ -103,9 +103,25 @@ void main() {
       find.text('Centro de Entrenamiento en Seguridad Minera'),
       findsOneWidget,
     );
-    // El ciclo empieza por aprender: la tarjeta destacada del inicio lleva a
-    // la biblioteca, no directamente a un escenario.
     expect(find.text('Tu progreso'), findsOneWidget);
+
+    // La barra inferior vive fuera del desplazamiento, asi que comprobarla
+    // verifica que el contenedor de navegacion se monto sin depender de
+    // cuanto contenido quepa en la primera pantalla. Se busca por tipo y no
+    // por la etiqueta de una pestana, porque una etiqueta puede repetirse en
+    // la pestana correspondiente y no quiero que el test dependa de si
+    // `find` excluye o no las pestanas inactivas del IndexedStack.
+    expect(find.byType(NavigationBar), findsOneWidget);
+
+    // El ciclo empieza por aprender: la tarjeta destacada lleva a la
+    // biblioteca, no directamente a un escenario. Vive mas abajo, asi que se
+    // desplaza en vez de dar por hecho que cabe: donde caiga exactamente es
+    // una cuestion de maquetacion, no algo que este test deba fijar.
+    await tester.drag(find.byType(ListView).first, const Offset(0, -400));
+    await tester.pump();
+    // Margen acotado para que termine cualquier inercia del gesto.
+    await tester.pump(const Duration(milliseconds: 500));
+
     expect(find.text('Continuar'), findsOneWidget);
   });
 
