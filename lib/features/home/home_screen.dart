@@ -10,10 +10,13 @@ import '../../core/l10n/app_strings.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/widgets/pressable_card.dart';
+import '../../data/scenarios/scenario_repository.dart';
+import '../../domain/training/scenario.dart';
 import '../iperc/practice/iperc_practice_screen.dart';
 import '../library/library_screen.dart';
 import '../library/topic_screen.dart';
-import '../mission/intro_mission_screen.dart';
+import '../mission/scenario_screen.dart';
+import '../scenarios/scenarios_screen.dart';
 import 'widgets/academic_notice_card.dart';
 import 'widgets/progress_panel.dart';
 import 'widgets/scenario_list.dart';
@@ -45,6 +48,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final theme = Theme.of(context);
     final flow = ref.watch(appFlowProvider);
     final strings = ref.watch(appStringsProvider).valueOrNull;
+    final scenarios = ref.watch(scenariosProvider).valueOrNull;
 
     if (strings == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -119,7 +123,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const SizedBox(height: AppSpacing.sm),
             _QuickTraining(
               strings: strings,
-              onIdentify: () => unawaited(_open(const IntroMissionScreen())),
+              onIdentify: () => unawaited(_open(const ScenariosScreen())),
               onTopic: (String id) {
                 unawaited(_open(TopicScreen(topicId: id)));
               },
@@ -131,11 +135,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               style: theme.textTheme.titleMedium,
             ),
             const SizedBox(height: AppSpacing.sm),
-            ScenarioList(
-              strings: strings,
-              introCompleted: flow.hasCompletedIntro,
-              onOpenIntro: () => unawaited(_open(const IntroMissionScreen())),
-            ),
+            if (scenarios == null)
+              const Center(child: CircularProgressIndicator())
+            else
+              ScenarioList(
+                strings: strings,
+                scenarios: scenarios,
+                completed: flow.completedScenarios,
+                onOpen: (TrainingScenario scenario) {
+                  unawaited(_open(ScenarioScreen(scenario: scenario)));
+                },
+              ),
             const SizedBox(height: AppSpacing.lg),
             Text(
               '${strings('content.sourceLabel')}: ${NormativeSource.full}',

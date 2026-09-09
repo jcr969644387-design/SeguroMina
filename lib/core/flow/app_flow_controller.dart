@@ -13,10 +13,9 @@ import '../preferences/preferences_repository.dart';
 class AppFlowState {
   const AppFlowState({
     this.hasSeenOnboarding = false,
-    this.hasCompletedIntro = false,
     this.hidesAcademicNotice = false,
     this.points = 0,
-    this.scenariosCompleted = 0,
+    this.completedScenarios = const <String>{},
     this.hazardAccuracy = unmeasured,
     this.ipercAccuracy = unmeasured,
     this.completedTopics = const <String>{},
@@ -29,10 +28,12 @@ class AppFlowState {
   static const int unmeasured = -1;
 
   final bool hasSeenOnboarding;
-  final bool hasCompletedIntro;
   final bool hidesAcademicNotice;
   final int points;
-  final int scenariosCompleted;
+  /// Escenarios ya superados, por identificador.
+  final Set<String> completedScenarios;
+
+  int get scenariosCompleted => completedScenarios.length;
 
   /// Porcentaje de aciertos identificando peligros.
   final int hazardAccuracy;
@@ -49,20 +50,18 @@ class AppFlowState {
 
   AppFlowState copyWith({
     bool? hasSeenOnboarding,
-    bool? hasCompletedIntro,
     bool? hidesAcademicNotice,
     int? points,
-    int? scenariosCompleted,
+    Set<String>? completedScenarios,
     int? hazardAccuracy,
     int? ipercAccuracy,
     Set<String>? completedTopics,
   }) {
     return AppFlowState(
       hasSeenOnboarding: hasSeenOnboarding ?? this.hasSeenOnboarding,
-      hasCompletedIntro: hasCompletedIntro ?? this.hasCompletedIntro,
       hidesAcademicNotice: hidesAcademicNotice ?? this.hidesAcademicNotice,
       points: points ?? this.points,
-      scenariosCompleted: scenariosCompleted ?? this.scenariosCompleted,
+      completedScenarios: completedScenarios ?? this.completedScenarios,
       hazardAccuracy: hazardAccuracy ?? this.hazardAccuracy,
       ipercAccuracy: ipercAccuracy ?? this.ipercAccuracy,
       completedTopics: completedTopics ?? this.completedTopics,
@@ -74,10 +73,9 @@ class AppFlowState {
 /// datos huerfanos en los dispositivos ya instalados.
 abstract final class AppFlowKeys {
   static const String seenOnboarding = 'flow.seenOnboarding';
-  static const String completedIntro = 'flow.completedIntro';
   static const String hidesNotice = 'flow.hidesAcademicNotice';
   static const String points = 'flow.points';
-  static const String scenarios = 'flow.scenariosCompleted';
+  static const String scenarios = 'flow.completedScenarios';
   static const String hazardAccuracy = 'flow.hazardAccuracy';
   static const String ipercAccuracy = 'flow.ipercAccuracy';
   static const String completedTopics = 'flow.completedTopics';
@@ -92,13 +90,13 @@ class AppFlowController extends Notifier<AppFlowState> {
   AppFlowState build() {
     final repository = ref.watch(preferencesRepositoryProvider);
     final topics = repository.readStringList(AppFlowKeys.completedTopics);
+    final scenarios = repository.readStringList(AppFlowKeys.scenarios);
 
     return AppFlowState(
       hasSeenOnboarding: repository.readBool(AppFlowKeys.seenOnboarding),
-      hasCompletedIntro: repository.readBool(AppFlowKeys.completedIntro),
       hidesAcademicNotice: repository.readBool(AppFlowKeys.hidesNotice),
       points: repository.readInt(AppFlowKeys.points),
-      scenariosCompleted: repository.readInt(AppFlowKeys.scenarios),
+      completedScenarios: scenarios.toSet(),
       hazardAccuracy: repository.readInt(
         AppFlowKeys.hazardAccuracy,
         fallback: AppFlowState.unmeasured,
@@ -136,31 +134,32 @@ class AppFlowController extends Notifier<AppFlowState> {
     await _repository.writeBool(AppFlowKeys.seenOnboarding, value: true);
   }
 
-  /// Registra el resultado de la mision de entrada.
+  /// Registra el resultado de un escenario.
   ///
-  /// Solo suma puntos la primera vez que se supera: repetir la mision sirve
-  /// para practicar, no para inflar el nivel.
-  Future<void> completeIntroMission({required int score}) async {
-    final first = !state.hasCompletedIntro;
+  /// Solo suma puntos la primera vez que se supera: repetirlo sirve para
+  /// practicar, no para inflar el nivel. La precision, en cambio, refleja
+  /// siempre el ultimo intento, que es lo que permite ver si mejoro.
+  Future<void> completeScenario({
+    required String scenarioId,
+    required int score,
+  }) async {
+    final first = !state.completedScenarios.contains(scenarioId);
     final points = first ? state.points + score : state.points;
-    final scenarios =
-        first ? state.scenariosCompleted + 1 : state.scenariosCompleted;
+    final scenarios = <String>{...state.completedScenarios, scenarioId};
 
-    // La precision refleja el ultimo intento, tambien al repetir: sirve para
-    // ver si el estudiante mejoro, y congelarla en el primer intento
-    // convertiria la practica en algo sin efecto visible.
     state = state.copyWith(
-      hasCompletedIntro: true,
       points: points,
-      scenariosCompleted: scenarios,
+      completedScenarios: scenarios,
       hazardAccuracy: score,
     );
 
-    await _repository.writeBool(AppFlowKeys.completedIntro, value: true);
     await _repository.writeInt(AppFlowKeys.hazardAccuracy, score);
     if (first) {
       await _repository.writeInt(AppFlowKeys.points, points);
-      await _repository.writeInt(AppFlowKeys.scenarios, scenarios);
+      await _repository.writeStringList(
+        AppFlowKeys.scenarios,
+        scenarios.toList(),
+      );
     }
   }
 

@@ -27,25 +27,25 @@ class HazardArea {
 
 /// Un peligro observable dentro de una escena de entrenamiento.
 ///
-/// Guarda claves de texto, no textos: la capa de presentacion las resuelve
-/// contra `assets/i18n/`. Asi el dominio queda libre de idioma.
+/// Lleva el texto y no claves de traduccion: es material didactico, crece y
+/// se corrige en `assets/content/` sin recompilar, igual que la biblioteca.
 class Hazard {
   const Hazard({
     required this.id,
-    required this.labelKey,
-    required this.explanationKey,
-    required this.controlKey,
+    required this.label,
+    required this.explanation,
+    required this.control,
     required this.area,
     required this.severity,
   });
 
   final String id;
-  final String labelKey;
-  final String explanationKey;
+  final String label;
+  final String explanation;
 
   /// Control recomendado. Es la parte que convierte la identificacion en
   /// decision: ver el peligro no basta, hay que saber que se hace con el.
-  final String controlKey;
+  final String control;
 
   final HazardArea area;
   final RiskLevel severity;

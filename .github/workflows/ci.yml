@@ -101,6 +101,27 @@ jobs:
           grep -q 'android:label="SeguroMina"' "$manifest"
           echo "Rotulo del lanzador: SeguroMina"
 
+      # La plantilla de Flutter deja su propio logo como icono de lanzador.
+      # Se sustituye por la marca de SeguroMina, escrita como VectorDrawable
+      # para no depender de generar mapas de bits: son archivos de texto,
+      # versionados en tool/android/res/ y copiados sobre lo generado.
+      - name: Instalar el icono de la aplicacion
+        run: |
+          set -euo pipefail
+          res=android/app/src/main/res
+          mkdir -p "$res/drawable" "$res/values" \
+            "$res/mipmap-anydpi" "$res/mipmap-anydpi-v26"
+          cp -f tool/android/res/drawable/ic_launcher_foreground.xml \
+            "$res/drawable/"
+          cp -f tool/android/res/values/ic_launcher_background.xml \
+            "$res/values/"
+          cp -f tool/android/res/mipmap-anydpi/ic_launcher.xml \
+            "$res/mipmap-anydpi/"
+          cp -f tool/android/res/mipmap-anydpi-v26/ic_launcher.xml \
+            "$res/mipmap-anydpi-v26/"
+          test -f "$res/mipmap-anydpi-v26/ic_launcher.xml"
+          echo "Icono de lanzador instalado."
+
       - name: Compilar APK release
         run: flutter build apk --release
 

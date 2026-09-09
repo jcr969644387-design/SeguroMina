@@ -1,0 +1,358 @@
+{
+  "schemaVersion": 2,
+  "normativeEdition": "DS-024-2016-EM-ed2026",
+  "validated": false,
+  "scenarios": [
+    {
+      "id": "labor-subterranea",
+      "code": "01",
+      "title": "Labor subterránea",
+      "briefing": "Inspecciona la galería de avance antes de autorizar la perforación.",
+      "situation": "Galería de avance del nivel 340, turno de noche. La voladura anterior se disparó hace cuatro horas. El sostenimiento del tramo llega hasta 6 m antes del frente. Hace dos meses hubo un desprendimiento de rocas en este mismo nivel.",
+      "estimatedMinutes": 3,
+      "scene": {
+        "profile": "arch",
+        "elements": [
+          {"type": "looseRock", "x": 0.18, "y": 0.18, "width": 0.22, "height": 0.18},
+          {"type": "crack", "x": 0.50, "y": 0.16, "width": 0.24, "height": 0.16},
+          {"type": "duct", "x": 0.82, "y": 0.18, "width": 0.24, "height": 0.16},
+          {"type": "bolt", "x": 0.10, "y": 0.30, "width": 0.08, "height": 0.12},
+          {"type": "worker", "x": 0.50, "y": 0.49, "width": 0.16, "height": 0.26},
+          {"type": "sign", "x": 0.82, "y": 0.49, "width": 0.18, "height": 0.24},
+          {"type": "cable", "x": 0.18, "y": 0.80, "width": 0.26, "height": 0.14},
+          {"type": "puddle", "x": 0.50, "y": 0.82, "width": 0.26, "height": 0.12}
+        ]
+      },
+      "hazards": [
+        {
+          "id": "roca-suelta",
+          "label": "Bloque de roca suelto en el techo",
+          "explanation": "El bloque quedó despegado del macizo tras la voladura y no hay sostenimiento en ese tramo. Es la condición que precede a una caída de rocas, la primera causa de accidentes mortales en minería subterránea.",
+          "control": "Desatar con barretilla desde zona segura antes de que entre nadie, y colocar sostenimiento según el estándar del nivel.",
+          "severity": "alto",
+          "area": {"left": 0.04, "top": 0.05, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "fractura-techo",
+          "label": "Macizo fracturado sin sostener",
+          "explanation": "Las fracturas visibles indican que el techo perdió continuidad. Sin pernos ni malla, cada disparo siguiente amplía las grietas.",
+          "control": "Instalar pernos y malla hasta el frente antes de reanudar la perforación.",
+          "severity": "alto",
+          "area": {"left": 0.36, "top": 0.05, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "manga-ventilacion",
+          "label": "Manga de ventilación desconectada",
+          "explanation": "Sin aire fresco en el frente, los gases de la voladura y el polvo de perforación se acumulan donde trabaja el personal. La atmósfera no avisa antes de volverse irrespirable.",
+          "control": "Reconectar y prolongar la manga hasta 10 m del frente, y verificar el caudal antes de ingresar.",
+          "severity": "alto",
+          "area": {"left": 0.68, "top": 0.05, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "sin-lentes",
+          "label": "Trabajador sin protección ocular",
+          "explanation": "La proyección de partículas es permanente durante la perforación. Sin lentes, una sola esquirla produce una lesión irreversible.",
+          "control": "Detener la tarea y dotar de lentes de seguridad antes de continuar. El EPP no sustituye a los controles anteriores: los complementa.",
+          "severity": "medio",
+          "area": {"left": 0.36, "top": 0.36, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "sin-senalizacion",
+          "label": "Zona no sostenida sin señalizar",
+          "explanation": "Nada impide que otro trabajador entre al tramo sin sostenimiento. La señalización no elimina el peligro, pero evita que se exponga quien no conoce la condición.",
+          "control": "Señalizar y restringir el paso al tramo hasta completar el sostenimiento.",
+          "severity": "medio",
+          "area": {"left": 0.68, "top": 0.36, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "cable-piso",
+          "label": "Cable eléctrico tendido en el piso",
+          "explanation": "Un conductor sobre el piso húmedo suma riesgo de tropiezo y de contacto eléctrico en la misma condición. El agua de filtración lo agrava.",
+          "control": "Suspender el cable en altura con soportes aislados y drenar el tramo inundado.",
+          "severity": "medio",
+          "area": {"left": 0.04, "top": 0.67, "width": 0.28, "height": 0.26}
+        }
+      ]
+    },
+    {
+      "id": "voladura",
+      "code": "02",
+      "title": "Voladura",
+      "briefing": "Revisa el frente cargado antes de autorizar el disparo.",
+      "situation": "Frente de la galería con los taladros cargados, al final de la guardia. El disparo está previsto en veinte minutos. Un taladro de la voladura anterior quedó sin detonar y el área todavía tiene tránsito de personal.",
+      "estimatedMinutes": 4,
+      "scene": {
+        "profile": "rect",
+        "elements": [
+          {"type": "blastHoles", "x": 0.18, "y": 0.18, "width": 0.24, "height": 0.20},
+          {"type": "looseRock", "x": 0.50, "y": 0.16, "width": 0.20, "height": 0.16},
+          {"type": "gas", "x": 0.82, "y": 0.18, "width": 0.26, "height": 0.20},
+          {"type": "cable", "x": 0.18, "y": 0.49, "width": 0.26, "height": 0.16},
+          {"type": "worker", "x": 0.50, "y": 0.49, "width": 0.16, "height": 0.26},
+          {"type": "barricade", "x": 0.82, "y": 0.49, "width": 0.24, "height": 0.22},
+          {"type": "sign", "x": 0.50, "y": 0.80, "width": 0.18, "height": 0.22}
+        ]
+      },
+      "hazards": [
+        {
+          "id": "tiro-cortado",
+          "label": "Taladro sin detonar de la voladura anterior",
+          "explanation": "Un tiro cortado conserva su carga íntegra. Perforar cerca o golpearlo con el equipo lo inicia sin aviso, y ocurre dentro de la labor con personal presente.",
+          "control": "Marcar y aislar el taladro, y eliminarlo según el procedimiento de tiros cortados con personal autorizado. No perforar a menos de la distancia que fija el estándar.",
+          "severity": "alto",
+          "area": {"left": 0.04, "top": 0.05, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "roca-colgada",
+          "label": "Roca colgada sobre el frente cargado",
+          "explanation": "Si el bloque cae sobre los taladros cargados durante la manipulación, puede iniciar la carga por impacto.",
+          "control": "Desatar el techo antes de cargar los taladros, nunca después.",
+          "severity": "alto",
+          "area": {"left": 0.36, "top": 0.05, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "gases-postvoladura",
+          "label": "Gases de la voladura anterior sin evacuar",
+          "explanation": "El monóxido de carbono y los óxidos de nitrógeno de un disparo previo permanecen en los rincones sin ventilación. No tienen olor que alerte a tiempo.",
+          "control": "Respetar el tiempo de ventilación del estándar y medir gases antes de autorizar el reingreso.",
+          "severity": "alto",
+          "area": {"left": 0.68, "top": 0.05, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "linea-disparo",
+          "label": "Línea de disparo junto a un conductor energizado",
+          "explanation": "Una corriente parásita o una inducción sobre la línea de disparo puede iniciar la voladura mientras hay personal en el frente.",
+          "control": "Separar la línea de disparo de toda instalación eléctrica y mantenerla en cortocircuito hasta el momento del disparo.",
+          "severity": "alto",
+          "area": {"left": 0.04, "top": 0.36, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "personal-en-area",
+          "label": "Personal en el área con el frente cargado",
+          "explanation": "Con los taladros cargados, cualquier persona en la labor está expuesta a un inicio accidental. El área cargada solo admite al personal de voladura.",
+          "control": "Evacuar la labor y dejar únicamente al personal autorizado hasta después del disparo.",
+          "severity": "alto",
+          "area": {"left": 0.36, "top": 0.36, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "sin-barricada",
+          "label": "Acceso sin barricada ni vigía",
+          "explanation": "El acceso queda abierto para quien no sabe que el frente está cargado. Un aviso por radio no detiene a quien no lo escuchó.",
+          "control": "Instalar barricada física con señalización y asignar vigía en cada acceso a la zona de voladura.",
+          "severity": "alto",
+          "area": {"left": 0.68, "top": 0.36, "width": 0.28, "height": 0.26}
+        }
+      ]
+    },
+    {
+      "id": "mantenimiento",
+      "code": "03",
+      "title": "Mantenimiento",
+      "briefing": "Inspecciona la intervención del equipo antes de que empiece el trabajo.",
+      "situation": "Taller subterráneo. Se va a intervenir el sistema hidráulico de un scoop. El equipo está detenido pero conserva la llave puesta, con el brazo levantado y el tablero de alimentación abierto.",
+      "estimatedMinutes": 4,
+      "scene": {
+        "profile": "rect",
+        "elements": [
+          {"type": "liftedArm", "x": 0.50, "y": 0.18, "width": 0.28, "height": 0.20},
+          {"type": "workerHigh", "x": 0.82, "y": 0.18, "width": 0.16, "height": 0.24},
+          {"type": "panel", "x": 0.18, "y": 0.49, "width": 0.22, "height": 0.26},
+          {"type": "truck", "x": 0.50, "y": 0.52, "width": 0.30, "height": 0.22},
+          {"type": "worker", "x": 0.82, "y": 0.52, "width": 0.16, "height": 0.26},
+          {"type": "tool", "x": 0.18, "y": 0.80, "width": 0.20, "height": 0.14},
+          {"type": "puddle", "x": 0.50, "y": 0.82, "width": 0.26, "height": 0.12}
+        ]
+      },
+      "hazards": [
+        {
+          "id": "brazo-sin-traba",
+          "label": "Brazo hidráulico levantado sin traba mecánica",
+          "explanation": "La presión hidráulica no es un soporte. Una fuga, una manguera que se afloja o el propio peso hacen descender el brazo sobre quien esté debajo.",
+          "control": "Bajar el brazo al piso o colocar la traba mecánica de seguridad antes de intervenir.",
+          "severity": "alto",
+          "area": {"left": 0.36, "top": 0.05, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "altura-sin-arnes",
+          "label": "Trabajo sobre el equipo sin protección contra caídas",
+          "explanation": "Por encima de 1.80 m toda tarea es trabajo en altura. La superficie del equipo suma aceite y vibración a una caída que ya sería grave.",
+          "control": "Usar plataforma con baranda o arnés con línea de vida anclada a punto certificado, y tramitar el permiso de trabajo en altura.",
+          "severity": "alto",
+          "area": {"left": 0.68, "top": 0.05, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "sin-loto",
+          "label": "Equipo sin bloqueo y etiquetado",
+          "explanation": "El tablero sigue energizado y la llave está puesta. Cualquiera puede arrancar el equipo mientras hay manos dentro. Es la condición que el procedimiento de bloqueo y etiquetado existe para impedir.",
+          "control": "Cortar la energía, bloquear con candado personal de cada interviniente, etiquetar y verificar energía cero antes de tocar el equipo.",
+          "severity": "alto",
+          "area": {"left": 0.04, "top": 0.36, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "partes-moviles",
+          "label": "Partes móviles accesibles sin guarda",
+          "explanation": "Con la guarda retirada, el punto de atrapamiento queda al alcance de la mano. Un arranque involuntario no deja tiempo de reacción.",
+          "control": "Reponer las guardas antes de la prueba y no operar el equipo con protecciones retiradas.",
+          "severity": "alto",
+          "area": {"left": 0.36, "top": 0.36, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "herramienta-improvisada",
+          "label": "Herramienta improvisada para la tarea",
+          "explanation": "Una herramienta forzada fuera de su uso se rompe o se zafa bajo carga, y proyecta fragmentos en la dirección del esfuerzo.",
+          "control": "Usar la herramienta especificada por el fabricante y retirar de servicio la que esté dañada.",
+          "severity": "medio",
+          "area": {"left": 0.04, "top": 0.67, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "derrame-aceite",
+          "label": "Derrame de aceite en el piso de trabajo",
+          "explanation": "El derrame combina resbalón y combustible en una zona con herramientas y equipo caliente.",
+          "control": "Contener y limpiar el derrame antes de iniciar la tarea, y corregir la fuga que lo origina.",
+          "severity": "medio",
+          "area": {"left": 0.36, "top": 0.67, "width": 0.28, "height": 0.26}
+        }
+      ]
+    },
+    {
+      "id": "transporte",
+      "code": "04",
+      "title": "Transporte minero",
+      "briefing": "Evalúa el tránsito en la rampa antes de autorizar el turno.",
+      "situation": "Rampa principal con pendiente del 12 %. Circulan volquetes cargados y personal a pie por la misma vía. Un equipo maniobra en retroceso en el cruce y la iluminación del tramo está parcialmente fuera de servicio.",
+      "estimatedMinutes": 4,
+      "scene": {
+        "profile": "ramp",
+        "elements": [
+          {"type": "sign", "x": 0.18, "y": 0.18, "width": 0.18, "height": 0.22},
+          {"type": "gas", "x": 0.82, "y": 0.18, "width": 0.24, "height": 0.18},
+          {"type": "truck", "x": 0.50, "y": 0.46, "width": 0.34, "height": 0.26},
+          {"type": "worker", "x": 0.18, "y": 0.52, "width": 0.16, "height": 0.26},
+          {"type": "blindSpot", "x": 0.82, "y": 0.49, "width": 0.26, "height": 0.24},
+          {"type": "rubble", "x": 0.18, "y": 0.80, "width": 0.24, "height": 0.14},
+          {"type": "edge", "x": 0.82, "y": 0.82, "width": 0.26, "height": 0.14}
+        ]
+      },
+      "hazards": [
+        {
+          "id": "sin-refugio",
+          "label": "Personal a pie en la vía de equipos",
+          "explanation": "La interacción equipo-persona es la causa de accidentes con mayor severidad en transporte minero. Un volquete cargado en pendiente no se detiene en la distancia que el peatón supone.",
+          "control": "Prohibir el tránsito peatonal por la vía, habilitar refugios cada 30 m y exigir comunicación previa con el operador antes de cualquier cruce.",
+          "severity": "alto",
+          "area": {"left": 0.04, "top": 0.36, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "punto-ciego",
+          "label": "Maniobra en retroceso con punto ciego",
+          "explanation": "El operador no ve la zona inmediatamente detrás del equipo. La mayoría de los atropellos ocurre en retroceso y con la persona convencida de que la vieron.",
+          "control": "Asignar vigía en toda maniobra de retroceso, o instalar cámara y alarma de retroceso operativas.",
+          "severity": "alto",
+          "area": {"left": 0.68, "top": 0.36, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "sin-berma",
+          "label": "Borde de vía sin berma de seguridad",
+          "explanation": "Sin berma no hay nada que detenga un equipo que se desvía. La caída del equipo por el borde es de consecuencia mortal.",
+          "control": "Construir berma de altura no menor a la mitad del diámetro de la rueda mayor que transite la vía.",
+          "severity": "alto",
+          "area": {"left": 0.68, "top": 0.67, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "sin-senal-cruce",
+          "label": "Cruce sin señalización ni control",
+          "explanation": "En un cruce sin reglas de prioridad, dos equipos llegan a la vez y ninguno de los dos espera.",
+          "control": "Señalizar el cruce con prioridad definida y exigir alto total antes de incorporarse a la vía principal.",
+          "severity": "medio",
+          "area": {"left": 0.04, "top": 0.05, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "material-en-via",
+          "label": "Material acumulado sobre la vía",
+          "explanation": "El material desviado obliga a maniobras cerca del borde, justo donde falta la berma.",
+          "control": "Limpiar la vía y programar el mantenimiento del tramo antes del inicio de guardia.",
+          "severity": "medio",
+          "area": {"left": 0.04, "top": 0.67, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "gases-escape",
+          "label": "Acumulación de gases de escape en el tramo",
+          "explanation": "El equipo diésel en pendiente exige más potencia y genera más monóxido justo donde la ventilación del tramo es menor.",
+          "control": "Verificar el caudal de aire para el número de equipos diésel autorizados y monitorear gases en la rampa.",
+          "severity": "alto",
+          "area": {"left": 0.68, "top": 0.05, "width": 0.28, "height": 0.26}
+        }
+      ]
+    },
+    {
+      "id": "ventilacion",
+      "code": "05",
+      "title": "Ventilación",
+      "briefing": "Verifica el circuito de ventilación antes de habilitar la labor.",
+      "situation": "Labor en desarrollo con ventilación auxiliar. El ventilador está instalado dentro de la misma galería que ventila y la puerta de control del circuito principal quedó abierta. No se ha medido la atmósfera desde el inicio de la guardia.",
+      "estimatedMinutes": 4,
+      "scene": {
+        "profile": "arch",
+        "elements": [
+          {"type": "duct", "x": 0.18, "y": 0.18, "width": 0.26, "height": 0.16},
+          {"type": "gas", "x": 0.50, "y": 0.18, "width": 0.26, "height": 0.20},
+          {"type": "dust", "x": 0.82, "y": 0.18, "width": 0.24, "height": 0.20},
+          {"type": "fan", "x": 0.18, "y": 0.49, "width": 0.22, "height": 0.24},
+          {"type": "door", "x": 0.50, "y": 0.49, "width": 0.22, "height": 0.26},
+          {"type": "worker", "x": 0.82, "y": 0.52, "width": 0.16, "height": 0.26},
+          {"type": "puddle", "x": 0.50, "y": 0.84, "width": 0.24, "height": 0.10}
+        ]
+      },
+      "hazards": [
+        {
+          "id": "manga-rota",
+          "label": "Manga de ventilación rota y sin llegar al tope",
+          "explanation": "El aire escapa antes de alcanzar el frente. El caudal que marca el ventilador no es el que llega a la persona.",
+          "control": "Reparar la manga y prolongarla hasta 10 m del tope, y verificar el caudal en el frente, no en el ventilador.",
+          "severity": "alto",
+          "area": {"left": 0.04, "top": 0.05, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "acumulacion-gases",
+          "label": "Acumulación de gases en el tope",
+          "explanation": "Sin barrido de aire, los gases de voladura y de los equipos diésel se estratifican en el fondo de la labor. La deficiencia de oxígeno no da síntomas de aviso antes de la pérdida de conciencia.",
+          "control": "Ventilar hasta alcanzar los límites del estándar y medir la atmósfera antes de autorizar el ingreso.",
+          "severity": "alto",
+          "area": {"left": 0.36, "top": 0.05, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "polvo-suspension",
+          "label": "Polvo en suspensión sin supresión",
+          "explanation": "El polvo respirable con sílice produce neumoconiosis, una enfermedad irreversible que se manifiesta años después de la exposición.",
+          "control": "Aplicar supresión con agua en la fuente y mantener el caudal de aire que exige el estándar para diluir el polvo.",
+          "severity": "medio",
+          "area": {"left": 0.68, "top": 0.05, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "recirculacion",
+          "label": "Ventilador instalado dentro de la labor que ventila",
+          "explanation": "El ventilador toma el aire viciado que él mismo expulsó y lo devuelve al frente. El equipo funciona, la manga sopla y la atmósfera no mejora: es el error de ventilación auxiliar más frecuente y el más difícil de detectar sin medir.",
+          "control": "Instalar el ventilador en la corriente de aire fresco, a una distancia del acceso que impida la recirculación.",
+          "severity": "alto",
+          "area": {"left": 0.04, "top": 0.36, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "puerta-abierta",
+          "label": "Puerta de ventilación abierta",
+          "explanation": "Una puerta abierta cortocircuita el circuito principal: el aire toma el camino corto y deja sin caudal a las labores del fondo, que pueden estar a varios niveles de distancia.",
+          "control": "Mantener cerradas las puertas de control y usar exclusas donde haya tránsito frecuente.",
+          "severity": "medio",
+          "area": {"left": 0.36, "top": 0.36, "width": 0.28, "height": 0.26}
+        },
+        {
+          "id": "sin-monitoreo",
+          "label": "Ingreso sin medición previa de gases",
+          "explanation": "Entrar a comprobar si el aire está bien es exponerse para obtener el dato. La medición se hace desde fuera y antes.",
+          "control": "Medir con equipo calibrado desde el acceso antes de ingresar, y registrar la lectura en el IPERC continuo de la tarea.",
+          "severity": "alto",
+          "area": {"left": 0.68, "top": 0.36, "width": 0.28, "height": 0.26}
+        }
+      ]
+    }
+  ]
+}

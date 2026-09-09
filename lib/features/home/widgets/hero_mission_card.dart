@@ -3,22 +3,22 @@ import 'package:flutter/material.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
-import '../../../domain/training/intro_mission.dart';
+import '../../../domain/training/scenario.dart';
 
-/// Ficha de la mision destacada.
+/// Ficha del escenario destacado.
 ///
-/// Es el elemento con mas peso visual del Home a proposito: la accion que se
-/// espera del estudiante es entrar a un escenario, no leer el menu.
+/// Es el elemento con mas peso visual a proposito: la accion que se espera
+/// del estudiante es entrar a un escenario, no leer el menu.
 class HeroMissionCard extends StatelessWidget {
   const HeroMissionCard({
-    required this.mission,
+    required this.scenario,
     required this.strings,
     required this.completed,
     required this.onStart,
     super.key,
   });
 
-  final Mission mission;
+  final TrainingScenario scenario;
   final AppStrings strings;
   final bool completed;
   final VoidCallback onStart;
@@ -33,52 +33,32 @@ class HeroMissionCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.primary,
         borderRadius: BorderRadius.circular(AppSpacing.lg),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.28),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
-          ),
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
             children: <Widget>[
-              Container(
-                padding: const EdgeInsets.all(AppSpacing.sm),
-                decoration: BoxDecoration(
-                  color: AppColors.secondary,
-                  borderRadius: BorderRadius.circular(AppSpacing.sm),
-                ),
-                child: const Icon(
-                  Icons.engineering,
-                  size: 26,
-                  color: AppColors.onSecondary,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Text(
                   strings.format(
                     'mission.codeLabel',
-                    <String, Object?>{'codigo': mission.code},
+                    <String, Object?>{'codigo': scenario.code},
                   ),
                   style: theme.textTheme.labelLarge?.copyWith(color: onCard),
                 ),
               ),
-              _RiskChip(label: strings(mission.dominantRisk.labelKey)),
+              _RiskChip(label: strings(scenario.dominantRisk.labelKey)),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            strings(mission.titleKey),
+            scenario.title,
             style: theme.textTheme.headlineSmall?.copyWith(color: onCard),
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            strings(mission.briefingKey),
+            scenario.briefing,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: onCard.withValues(alpha: 0.88),
             ),
@@ -95,7 +75,7 @@ class HeroMissionCard extends StatelessWidget {
               Text(
                 strings.format(
                   'mission.estimated',
-                  <String, Object?>{'minutos': mission.estimatedMinutes},
+                  <String, Object?>{'minutos': scenario.estimatedMinutes},
                 ),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: onCard.withValues(alpha: 0.85),
@@ -105,16 +85,14 @@ class HeroMissionCard extends StatelessWidget {
               Icon(
                 completed ? Icons.check_circle : Icons.radio_button_unchecked,
                 size: 16,
-                color: completed
-                    ? AppColors.secondary
-                    : onCard.withValues(alpha: 0.85),
+                color: onCard.withValues(alpha: 0.85),
               ),
               const SizedBox(width: AppSpacing.xs),
               Expanded(
                 child: Text(
                   strings.format(
                     'mission.intro.objective',
-                    <String, Object?>{'total': mission.hazards.length},
+                    <String, Object?>{'total': scenario.hazards.length},
                   ),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: onCard.withValues(alpha: 0.85),

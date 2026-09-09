@@ -6,38 +6,54 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/flow/app_flow_controller.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../core/theme/app_typography.dart';
-import '../../domain/training/intro_mission.dart';
+import '../../data/scenarios/scenario_repository.dart';
+import '../../domain/training/scenario.dart';
 import '../home/widgets/hero_mission_card.dart';
 import '../home/widgets/scenario_list.dart';
-import '../mission/intro_mission_screen.dart';
+import '../mission/scenario_screen.dart';
 
 /// Catalogo de escenarios.
 ///
-/// Destaca el escenario disponible y lista el itinerario completo. Los cuatro
-/// restantes aparecen bloqueados con su nombre real: el estudiante debe saber
-/// que viene despues, no descubrirlo cuando aparezca.
+/// Destaca el siguiente escenario pendiente y lista el itinerario completo.
+/// Los cinco tienen contenido; ninguno esta bloqueado.
 class ScenariosScreen extends ConsumerWidget {
   const ScenariosScreen({super.key});
+
+  /// El primero sin superar, o el primero de la lista si ya estan todos.
+  TrainingScenario _featured(
+    List<TrainingScenario> scenarios,
+    Set<String> completed,
+  ) {
+    for (final scenario in scenarios) {
+      if (!completed.contains(scenario.id)) {
+        return scenario;
+      }
+    }
+    return scenarios.first;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final flow = ref.watch(appFlowProvider);
     final strings = ref.watch(appStringsProvider).valueOrNull;
+    final scenarios = ref.watch(scenariosProvider).valueOrNull;
 
-    if (strings == null) {
+    if (strings == null || scenarios == null || scenarios.isEmpty) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    void openIntro() {
+    void open(TrainingScenario scenario) {
       unawaited(
         Navigator.of(context).push<void>(
           MaterialPageRoute<void>(
-            builder: (context) => const IntroMissionScreen(),
+            builder: (context) => ScenarioScreen(scenario: scenario),
           ),
         ),
       );
     }
+
+    final featured = _featured(scenarios, flow.completedScenarios);
 
     return Scaffold(
       appBar: AppBar(title: Text(strings('nav.scenarios'))),
@@ -50,10 +66,10 @@ class ScenariosScreen extends ConsumerWidget {
         ),
         children: <Widget>[
           HeroMissionCard(
-            mission: IntroMission.definition,
+            scenario: featured,
             strings: strings,
-            completed: flow.hasCompletedIntro,
-            onStart: openIntro,
+            completed: flow.completedScenarios.contains(featured.id),
+            onStart: () => open(featured),
           ),
           const SizedBox(height: AppSpacing.lg),
           Text(
@@ -63,8 +79,9 @@ class ScenariosScreen extends ConsumerWidget {
           const SizedBox(height: AppSpacing.sm),
           ScenarioList(
             strings: strings,
-            introCompleted: flow.hasCompletedIntro,
-            onOpenIntro: openIntro,
+            scenarios: scenarios,
+            completed: flow.completedScenarios,
+            onOpen: open,
           ),
         ],
       ),

@@ -5,9 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:seguromina/domain/iperc/iperc_evaluation.dart';
 import 'package:seguromina/domain/iperc/risk_assessment.dart';
 import 'package:seguromina/domain/progress/trainee_level.dart';
-import 'package:seguromina/domain/training/intro_mission.dart';
 import 'package:seguromina/domain/training/risk_level.dart';
-import 'package:seguromina/features/home/widgets/scenario_list.dart';
 
 /// Contrato entre el codigo y el archivo de textos.
 ///
@@ -73,27 +71,6 @@ void main() {
     for (final step in IpercStep.values) {
       expectKey(step.labelKey);
       expectKey('practice.prompt.${step.name}');
-    }
-  });
-
-  test('existen los textos de los escenarios del itinerario', () {
-    for (final scenario in ScenarioList.scenarios) {
-      expectKey(scenario.labelKey);
-    }
-    expectKey('scenario.available');
-    expectKey('scenario.completed');
-    expectKey('scenario.locked');
-  });
-
-  test('existen los textos de la mision de entrada', () {
-    const mission = IntroMission.definition;
-    expectKey(mission.titleKey);
-    expectKey(mission.briefingKey);
-
-    for (final hazard in mission.hazards) {
-      expectKey(hazard.labelKey);
-      expectKey(hazard.explanationKey);
-      expectKey(hazard.controlKey);
     }
   });
 
@@ -219,6 +196,7 @@ void main() {
       'mission.finish',
       'mission.foundCount',
       'mission.sceneLabel',
+      'mission.situationTitle',
       'mission.intro.objective',
       'result.title',
       'result.score',

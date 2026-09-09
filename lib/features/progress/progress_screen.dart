@@ -6,9 +6,10 @@ import '../../core/l10n/app_strings.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../data/library/library_repository.dart';
+import '../../data/scenarios/scenario_repository.dart';
 import '../../domain/library/library_content.dart';
 import '../../domain/progress/trainee_level.dart';
-import '../home/widgets/scenario_list.dart';
+import '../../domain/training/scenario.dart';
 
 /// Avance del estudiante.
 ///
@@ -24,6 +25,7 @@ class ProgressScreen extends ConsumerWidget {
     final flow = ref.watch(appFlowProvider);
     final strings = ref.watch(appStringsProvider).valueOrNull;
     final content = ref.watch(libraryContentProvider).valueOrNull;
+    final scenarios = ref.watch(scenariosProvider).valueOrNull;
 
     if (strings == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -77,7 +79,14 @@ class ProgressScreen extends ConsumerWidget {
             style: theme.textTheme.titleMedium,
           ),
           const SizedBox(height: AppSpacing.sm),
-          _ScenarioProgress(strings: strings, flow: flow),
+          if (scenarios == null)
+            const Center(child: CircularProgressIndicator())
+          else
+            _ScenarioProgress(
+              strings: strings,
+              flow: flow,
+              scenarios: scenarios,
+            ),
         ],
       ),
     );
@@ -310,15 +319,20 @@ class _CategoryRow extends StatelessWidget {
 }
 
 class _ScenarioProgress extends StatelessWidget {
-  const _ScenarioProgress({required this.strings, required this.flow});
+  const _ScenarioProgress({
+    required this.strings,
+    required this.flow,
+    required this.scenarios,
+  });
 
   final AppStrings strings;
   final AppFlowState flow;
+  final List<TrainingScenario> scenarios;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final total = ScenarioList.scenarios.length;
+    final total = scenarios.length;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -334,10 +348,10 @@ class _ScenarioProgress extends StatelessWidget {
           style: theme.textTheme.bodyMedium,
         ),
         const SizedBox(height: AppSpacing.sm),
-        for (final scenario in ScenarioList.scenarios)
+        for (final scenario in scenarios)
           _CategoryRow(
-            title: strings(scenario.labelKey),
-            read: scenario.ready && flow.hasCompletedIntro ? 1 : 0,
+            title: scenario.title,
+            read: flow.completedScenarios.contains(scenario.id) ? 1 : 0,
             total: 1,
           ),
       ],

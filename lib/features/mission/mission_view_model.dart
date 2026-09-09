@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../domain/training/intro_mission.dart';
+import '../../domain/training/hazard.dart';
 import '../../domain/training/mission_scoring.dart';
 
-/// Estado de la pantalla de inspeccion.
+/// Estado de la inspeccion de un escenario.
 @immutable
 class MissionUiState {
   const MissionUiState({
@@ -20,14 +20,13 @@ class MissionUiState {
   bool get finished => result != null;
 }
 
-/// Vista-modelo de la mision de entrada.
+/// Vista-modelo de la inspeccion.
 ///
 /// No contiene reglas: delega la puntuacion en `MissionScoring`, que vive en
-/// el dominio y se testea sin interfaz. Aqui solo se guarda lo que el
-/// estudiante lleva tocado y si ya cerro la inspeccion.
+/// el dominio y se testea sin interfaz. El escenario se pasa como argumento
+/// a [finish] en vez de fijarlo en el provider, de modo que la misma
+/// vista-modelo sirve para los cinco.
 class MissionViewModel extends AutoDisposeNotifier<MissionUiState> {
-  Mission get mission => IntroMission.definition;
-
   @override
   MissionUiState build() => const MissionUiState();
 
@@ -50,9 +49,9 @@ class MissionViewModel extends AutoDisposeNotifier<MissionUiState> {
     );
   }
 
-  MissionResult finish() {
+  MissionResult finish(List<Hazard> hazards) {
     final result = MissionScoring.evaluate(
-      hazards: mission.hazards,
+      hazards: hazards,
       marks: state.marks,
     );
     state = MissionUiState(marks: state.marks, result: result);
