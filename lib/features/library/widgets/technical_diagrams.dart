@@ -153,8 +153,7 @@ class RiskMatrixDiagram extends StatelessWidget {
             for (final level in RiskLevel.values)
               _LegendChip(
                 color: _fill(level),
-                label: '${strings(level.labelKey)} '
-                    '${strings(level.rangeKey)}',
+                label: '${strings(level.labelKey)} ${strings(level.rangeKey)}',
               ),
           ],
         ),
@@ -172,8 +171,12 @@ class RiskMatrixDiagram extends StatelessWidget {
       probability: probability,
     );
     final level = RiskMatrix.levelFor(index);
-    final selected = severity == highlightSeverity &&
-        probability == highlightProbability;
+    final selected =
+        severity == highlightSeverity && probability == highlightProbability;
+    final style = Theme.of(context).textTheme.bodySmall?.copyWith(
+      fontWeight: FontWeight.w700,
+      color: selected ? Colors.white : null,
+    );
 
     return Container(
       margin: const EdgeInsets.all(1),
@@ -185,14 +188,7 @@ class RiskMatrixDiagram extends StatelessWidget {
             : null,
         borderRadius: BorderRadius.circular(3),
       ),
-      child: Text(
-        '$index',
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w700,
-              color: selected ? Colors.white : null,
-            ),
-      ),
+      child: Text('$index', textAlign: TextAlign.center, style: style),
     );
   }
 }

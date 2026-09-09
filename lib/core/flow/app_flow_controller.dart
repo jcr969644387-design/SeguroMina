@@ -113,9 +113,8 @@ class AppFlowController extends Notifier<AppFlowState> {
   Future<void> completeIntroMission({required int score}) async {
     final first = !state.hasCompletedIntro;
     final points = first ? state.points + score : state.points;
-    final scenarios = first
-        ? state.scenariosCompleted + 1
-        : state.scenariosCompleted;
+    final scenarios =
+        first ? state.scenariosCompleted + 1 : state.scenariosCompleted;
 
     // La precision refleja el ultimo intento, tambien al repetir: sirve para
     // ver si el estudiante mejoro, y congelarla en el primer intento

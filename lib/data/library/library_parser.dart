@@ -28,9 +28,9 @@ LibraryContent parseLibraryContent(String raw) {
   }
 
   return LibraryContent(
-    categories: categories
-        .map((Object? item) => _category(item))
-        .toList(growable: false),
+    categories: <LibraryCategory>[
+      for (final item in categories) _category(item),
+    ],
   );
 }
 
@@ -64,9 +64,9 @@ LibraryTopic _topic(Object? item) {
     summary: _string(map, 'summary'),
     miningExample: _string(map, 'miningExample'),
     diagram: map['diagram'] as String?,
-    sections: sections
-        .map((Object? item) => _section(item))
-        .toList(growable: false),
+    sections: <LibrarySection>[
+      for (final item in sections) _section(item),
+    ],
     check: map['check'] == null ? null : _check(map['check']),
   );
 }
