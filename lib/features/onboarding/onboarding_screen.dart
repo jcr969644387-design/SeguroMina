@@ -5,7 +5,7 @@ import '../../core/flow/app_flow_controller.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
-import 'widgets/onboarding_art.dart';
+import '../library/widgets/technical_diagrams.dart';
 
 /// Onboarding de tres pantallas.
 ///
@@ -28,17 +28,17 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     _OnboardingPage(
       titleKey: 'onboarding.observe.title',
       bodyKey: 'onboarding.observe.body',
-      art: OnboardingArt.observe,
+      diagram: 'hazard_vs_risk',
     ),
     _OnboardingPage(
       titleKey: 'onboarding.evaluate.title',
       bodyKey: 'onboarding.evaluate.body',
-      art: OnboardingArt.evaluate,
+      diagram: 'risk_matrix',
     ),
     _OnboardingPage(
       titleKey: 'onboarding.decide.title',
       bodyKey: 'onboarding.decide.body',
-      art: OnboardingArt.decide,
+      diagram: 'control_hierarchy',
     ),
   ];
 
@@ -97,6 +97,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     page: page,
                     title: strings(page.titleKey),
                     body: strings(page.bodyKey),
+                    strings: strings,
                   );
                 },
               ),
@@ -129,12 +130,15 @@ class _OnboardingPage {
   const _OnboardingPage({
     required this.titleKey,
     required this.bodyKey,
-    required this.art,
+    required this.diagram,
   });
 
   final String titleKey;
   final String bodyKey;
-  final OnboardingArt art;
+
+  /// Diagrama tecnico que ilustra la pantalla. Son los mismos que usa la
+  /// biblioteca: el onboarding adelanta contenido real, no decoracion.
+  final String diagram;
 }
 
 class _OnboardingPageView extends StatelessWidget {
@@ -142,26 +146,26 @@ class _OnboardingPageView extends StatelessWidget {
     required this.page,
     required this.title,
     required this.body,
+    required this.strings,
   });
 
   final _OnboardingPage page;
   final String title;
   final String body;
+  final AppStrings strings;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Expanded(
-            child: Center(
-              child: OnboardingArtwork(art: page.art),
-            ),
-          ),
+          const SizedBox(height: AppSpacing.md),
+          TechnicalDiagram(id: page.diagram, strings: strings),
+          const SizedBox(height: AppSpacing.xl),
           Text(title, style: theme.textTheme.displaySmall),
           const SizedBox(height: AppSpacing.md),
           Text(

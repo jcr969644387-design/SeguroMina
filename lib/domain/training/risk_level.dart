@@ -23,4 +23,10 @@ enum RiskLevel {
 
   /// Clave de texto del nivel. El dominio no conoce cadenas visibles.
   String get labelKey => 'risk.$name';
+
+  /// Rango de indices de la matriz que corresponde al nivel.
+  String get rangeKey => 'risk.$name.range';
+
+  /// Plazo maximo de correccion que fija la norma para el nivel.
+  String get deadlineKey => 'risk.$name.deadline';
 }

@@ -7,20 +7,22 @@ import '../../core/brand/seguromina_mark.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/flow/app_flow_controller.dart';
 import '../../core/l10n/app_strings.dart';
+import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
-import '../../domain/training/intro_mission.dart';
+import '../../core/widgets/pressable_card.dart';
+import '../library/library_screen.dart';
+import '../library/topic_screen.dart';
 import '../mission/intro_mission_screen.dart';
-import '../placeholder/coming_soon_screen.dart';
 import 'widgets/academic_notice_card.dart';
-import 'widgets/hero_mission_card.dart';
-import 'widgets/level_badge.dart';
-import 'widgets/module_grid.dart';
+import 'widgets/progress_panel.dart';
+import 'widgets/scenario_list.dart';
 
 /// Centro de entrenamiento.
 ///
-/// El orden de la pantalla es deliberado: primero quien eres y como vas,
-/// despues la mision que puedes empezar ahora, y solo al final el resto de
-/// modulos. Lo que se espera del estudiante ocupa el centro.
+/// El orden refleja el ciclo que estructura la app: primero donde estas,
+/// despues que toca aprender ahora, luego practica corta y por ultimo los
+/// escenarios completos. La gamificacion acompana y no manda: el nivel
+/// aparece dentro del panel de progreso, no como cabecera de la pantalla.
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -29,27 +31,11 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  /// Descarte de la sesion actual. El descarte permanente vive en el
-  /// repositorio de preferencias.
   bool _noticeDismissed = false;
 
-  Future<void> _openMission() async {
+  Future<void> _open(Widget screen) async {
     await Navigator.of(context).push<void>(
-      MaterialPageRoute<void>(
-        builder: (context) => const IntroMissionScreen(),
-      ),
-    );
-  }
-
-  Future<void> _openModule(HomeModule module) async {
-    if (module == HomeModule.scenarios) {
-      await _openMission();
-      return;
-    }
-    await Navigator.of(context).push<void>(
-      MaterialPageRoute<void>(
-        builder: (context) => ComingSoonScreen(titleKey: module.titleKey),
-      ),
+      MaterialPageRoute<void>(builder: (context) => screen),
     );
   }
 
@@ -77,7 +63,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                const SeguroMinaMark(size: 44),
+                const SeguroMinaMark(size: 40),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: Column(
@@ -88,7 +74,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         style: theme.textTheme.headlineSmall,
                       ),
                       Text(
-                        strings('home.greeting'),
+                        strings('home.subtitle'),
                         style: theme.textTheme.bodySmall,
                       ),
                     ],
@@ -96,27 +82,44 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: AppSpacing.md),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: LevelBadge(
-                label: strings(flow.level.labelKey),
-                points: strings.format(
-                  'home.pointsLabel',
-                  <String, Object?>{'puntos': flow.points},
-                ),
-                progress: flow.levelProgress,
-              ),
+            const SizedBox(height: AppSpacing.lg),
+            ProgressPanel(strings: strings, flow: flow),
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              strings('home.continueTitle'),
+              style: theme.textTheme.titleMedium,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            _ContinueCard(
+              strings: strings,
+              onOpen: () => unawaited(_open(const LibraryScreen())),
             ),
             const SizedBox(height: AppSpacing.lg),
-            HeroMissionCard(
-              mission: IntroMission.definition,
+            Text(
+              strings('home.quickTitle'),
+              style: theme.textTheme.titleMedium,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            _QuickTraining(
               strings: strings,
-              completed: flow.hasCompletedIntro,
-              onStart: _openMission,
+              onIdentify: () => unawaited(_open(const IntroMissionScreen())),
+              onTopic: (String id) {
+                unawaited(_open(TopicScreen(topicId: id)));
+              },
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              strings('home.scenariosTitle'),
+              style: theme.textTheme.titleMedium,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            ScenarioList(
+              strings: strings,
+              introCompleted: flow.hasCompletedIntro,
+              onOpenIntro: () => unawaited(_open(const IntroMissionScreen())),
             ),
             if (showNotice) ...<Widget>[
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.lg),
               AcademicNoticeCard(
                 strings: strings,
                 onUnderstood: () => setState(() => _noticeDismissed = true),
@@ -129,18 +132,166 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ],
             const SizedBox(height: AppSpacing.lg),
             Text(
-              strings('home.quickAccess'),
-              style: theme.textTheme.titleMedium,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            ModuleGrid(strings: strings, onOpen: _openModule),
-            const SizedBox(height: AppSpacing.lg),
-            Text(
               '${strings('content.sourceLabel')}: ${NormativeSource.full}',
               style: theme.textTheme.bodySmall,
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Siguiente paso del itinerario.
+///
+/// Apunta a la biblioteca y no a un escenario porque el ciclo empieza por
+/// aprender. Cuando existan las rutas por modulo, esta tarjeta pasara a
+/// senalar el punto exacto donde se quedo el estudiante.
+class _ContinueCard extends StatelessWidget {
+  const _ContinueCard({required this.strings, required this.onOpen});
+
+  final AppStrings strings;
+  final VoidCallback onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: AppColors.primary,
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            strings('home.foundationsTitle'),
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: Colors.white.withValues(alpha: 0.80),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            strings('library.title'),
+            style: theme.textTheme.headlineSmall?.copyWith(
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            strings('library.subtitle'),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: Colors.white.withValues(alpha: 0.88),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              onPressed: onOpen,
+              style: FilledButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: AppColors.primary,
+              ),
+              child: Text(strings('home.continueAction')),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _QuickTraining extends StatelessWidget {
+  const _QuickTraining({
+    required this.strings,
+    required this.onIdentify,
+    required this.onTopic,
+  });
+
+  final AppStrings strings;
+  final VoidCallback onIdentify;
+  final void Function(String topicId) onTopic;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const spacing = AppSpacing.sm;
+        final width = (constraints.maxWidth - spacing) / 2;
+
+        return Wrap(
+          spacing: spacing,
+          runSpacing: spacing,
+          children: <Widget>[
+            SizedBox(
+              width: width,
+              child: _QuickTile(
+                label: strings('home.quick.identify'),
+                icon: Icons.search,
+                onTap: onIdentify,
+              ),
+            ),
+            SizedBox(
+              width: width,
+              child: _QuickTile(
+                label: strings('home.quick.evaluate'),
+                icon: Icons.grid_view_rounded,
+                onTap: () => onTopic('evaluacion'),
+              ),
+            ),
+            SizedBox(
+              width: width,
+              child: _QuickTile(
+                label: strings('home.quick.control'),
+                icon: Icons.layers_outlined,
+                onTap: () => onTopic('controles-iperc'),
+              ),
+            ),
+            SizedBox(
+              width: width,
+              child: _QuickTile(
+                label: strings('home.quick.iperc'),
+                icon: Icons.account_tree_outlined,
+                onTap: () => onTopic('que-es-iperc'),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _QuickTile extends StatelessWidget {
+  const _QuickTile({
+    required this.label,
+    required this.icon,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return PressableCard(
+      onTap: onTap,
+      semanticLabel: label,
+      padding: const EdgeInsets.all(AppSpacing.sm),
+      child: Row(
+        children: <Widget>[
+          Icon(icon, size: 18, color: AppColors.primary),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Text(label, style: theme.textTheme.bodySmall),
+          ),
+        ],
       ),
     );
   }

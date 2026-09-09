@@ -1,0 +1,359 @@
+{
+  "schemaVersion": 1,
+  "normativeEdition": "DS-024-2016-EM-ed2026",
+  "validated": false,
+  "categories": [
+    {
+      "id": "fundamentos",
+      "title": "Fundamentos de seguridad",
+      "description": "Los conceptos que sostienen todo lo demás. Sin distinguir peligro de riesgo, una matriz IPERC es un formulario que se llena sin entender.",
+      "topics": [
+        {
+          "id": "peligro",
+          "title": "Peligro",
+          "summary": "Una fuente con capacidad de causar daño. Existe aunque no haya nadie expuesto.",
+          "diagram": "hazard_vs_risk",
+          "sections": [
+            {
+              "heading": "Definición",
+              "body": "El D.S. 024-2016-EM define el peligro como la situación o característica intrínseca de algo capaz de ocasionar daños a las personas, equipos, procesos y ambiente.\n\nLa palabra clave es intrínseca: el peligro es una propiedad de la cosa, no de la circunstancia. Una roca fracturada en el techo de una labor es un peligro a las tres de la madrugada, con la labor vacía y sin nadie que la vea."
+            },
+            {
+              "heading": "Cómo se reconoce un peligro",
+              "body": "Casi todo peligro se reduce a una energía que puede liberarse fuera de control. Buscar la energía es más fiable que buscar el peligro:\n\n• Gravitatoria: rocas sueltas, cargas suspendidas, trabajo en altura.\n• Mecánica: partes móviles, fajas transportadoras, equipo en movimiento.\n• Eléctrica: cables, tableros, líneas energizadas.\n• Química: gases, polvo respirable, reactivos, explosivos.\n• Térmica: superficies calientes, soldadura, incendios.\n• Acústica: perforación, ventiladores, voladura.\n• Hidráulica y neumática: mangueras a presión, acumuladores."
+            },
+            {
+              "heading": "Un error frecuente",
+              "body": "Escribir el peligro como si fuera el daño. «Golpeado por roca» no es un peligro: es la consecuencia. El peligro es la roca fracturada sin sostenimiento.\n\nNombrar mal el peligro arrastra el error a toda la línea del IPERC, porque los controles se eligen contra el peligro, no contra la consecuencia."
+            }
+          ],
+          "miningExample": "En una galería de avance, el macizo rocoso del techo presenta fracturas visibles y no tiene sostenimiento colocado. Ese es el peligro. Está ahí desde que terminó la voladura, tanto si pasa un trabajador como si no.",
+          "check": {
+            "prompt": "En una labor sin nadie dentro, el techo muestra fracturas y no tiene sostenimiento. ¿Existe un peligro?",
+            "options": [
+              "No, porque no hay nadie expuesto",
+              "Sí, el peligro existe con independencia de la exposición",
+              "Solo si la labor se va a usar ese turno"
+            ],
+            "correctIndex": 1,
+            "explanation": "El peligro es una característica intrínseca de la roca fracturada y no depende de que haya personas. Lo que sí depende de la exposición es el riesgo: aparece cuando alguien transita debajo."
+          }
+        },
+        {
+          "id": "riesgo",
+          "title": "Riesgo",
+          "summary": "La probabilidad de que un peligro se materialice, combinada con la gravedad del daño.",
+          "diagram": "hazard_vs_risk",
+          "sections": [
+            {
+              "heading": "Definición",
+              "body": "El riesgo es la probabilidad de que un peligro se materialice en determinadas condiciones y genere daños a las personas, equipos o al ambiente.\n\nSe compone de dos cosas y hay que evaluar las dos por separado:\n\n• Probabilidad: cuán factible es que ocurra.\n• Severidad: cuán grave sería el daño si ocurriera."
+            },
+            {
+              "heading": "La diferencia con el peligro",
+              "body": "El peligro es la fuente. El riesgo es lo que puede pasar cuando alguien queda expuesto a esa fuente.\n\nUn mismo peligro genera riesgos distintos según la exposición. La roca fracturada del ejemplo anterior representa un riesgo bajo si la labor está clausurada, y un riesgo alto si es la vía de acceso del turno.\n\nDe ahí sale la consecuencia práctica más importante: se puede reducir el riesgo sin eliminar el peligro. Pero es siempre mejor eliminar el peligro."
+            },
+            {
+              "heading": "Cómo se redacta un riesgo",
+              "body": "Un riesgo bien redactado nombra el daño y a quién le ocurre. No basta con «caída de rocas»: eso sigue siendo el evento.\n\nRedacción útil: caída de roca desde el techo sobre el personal que transita por la labor, con consecuencia de lesión grave o mortal.\n\nEsa frase ya contiene lo que hace falta para evaluar: qué cae, sobre quién y con qué consecuencia."
+            }
+          ],
+          "miningExample": "Peligro: roca fracturada sin sostenimiento en el techo de la galería.\nRiesgo: caída de roca sobre el personal que transita por la galería hacia el frente de trabajo, con consecuencia de lesión incapacitante o muerte.",
+          "check": {
+            "prompt": "¿Cuál de estas frases describe un riesgo y no un peligro?",
+            "options": [
+              "Cable eléctrico tendido sobre el piso húmedo",
+              "Contacto eléctrico del personal que transita, con consecuencia de electrocución",
+              "Energía eléctrica en la labor"
+            ],
+            "correctIndex": 1,
+            "explanation": "Las otras dos nombran la fuente de energía, es decir, el peligro. La segunda describe qué le puede ocurrir a quién y con qué consecuencia: eso es el riesgo."
+          }
+        },
+        {
+          "id": "incidente-accidente",
+          "title": "Incidente y accidente",
+          "summary": "El incidente es el aviso gratuito. El accidente es el que ya dejó lesión.",
+          "diagram": "accident_pyramid",
+          "sections": [
+            {
+              "heading": "Incidente",
+              "body": "Suceso con potencial de pérdidas ocurrido en el trabajo, en el que la persona afectada no sufre lesiones, o estas solo requieren primeros auxilios.\n\nLa norma distingue además el incidente peligroso: el suceso que pudo causar lesiones o enfermedades a las personas, aunque no llegara a hacerlo. Un desprendimiento de rocas en una labor vacía es un incidente peligroso."
+            },
+            {
+              "heading": "Accidente de trabajo",
+              "body": "Suceso repentino que sobreviene por causa o con ocasión del trabajo y que produce en el trabajador una lesión orgánica, una perturbación funcional, una invalidez o la muerte.\n\nSe clasifican por su consecuencia:\n\n• Leve: requiere descanso breve y el trabajador retorna a su labor.\n• Incapacitante: exige descanso médico o tratamiento. Puede ser parcial temporal, total temporal, parcial permanente o total permanente.\n• Mortal."
+            },
+            {
+              "heading": "Por qué importa el incidente",
+              "body": "Por cada accidente grave hay muchos incidentes previos con el mismo origen. Esa proporción es la razón de que investigar incidentes sea rentable: el incidente entrega la misma información que el accidente sin cobrar el precio.\n\nUna operación que solo investiga lo que dejó lesión está aprendiendo de la manera más cara posible."
+            }
+          ],
+          "miningExample": "Una roca de 20 kg se desprende del techo y cae en la galería. Si no había nadie, es un incidente peligroso. Si golpea el casco de un trabajador que sigue laborando sin lesión, es un incidente. Si le fractura el hombro, es un accidente incapacitante. El desprendimiento fue el mismo en los tres casos: lo que cambió fue la exposición.",
+          "check": {
+            "prompt": "Un trabajador tropieza con un cable, cae y continúa trabajando sin lesión. ¿Cómo se clasifica?",
+            "options": [
+              "Accidente leve",
+              "Incidente",
+              "No se registra porque no hubo daño"
+            ],
+            "correctIndex": 1,
+            "explanation": "Hubo un suceso con potencial de pérdida pero sin lesión: es un incidente, y debe registrarse e investigarse. No registrarlo elimina justamente el aviso que permitiría evitar el accidente siguiente."
+          }
+        },
+        {
+          "id": "acto-inseguro",
+          "title": "Acto inseguro",
+          "summary": "Una acción de la persona que se aparta del estándar. Es la mitad de la historia, no toda.",
+          "sections": [
+            {
+              "heading": "Definición",
+              "body": "Acción u omisión de un trabajador que se aparta del procedimiento o del estándar establecido y que puede causar un accidente.\n\nLo decide el estándar escrito, no la opinión del observador. Si no existe un procedimiento que diga cómo se hace la tarea, es difícil sostener que alguien se apartó de él."
+            },
+            {
+              "heading": "Ejemplos en minería",
+              "body": "• Ingresar al frente sin realizar el desatado de rocas.\n• Operar un equipo sin autorización ni licencia interna.\n• Trabajar sin los lentes de seguridad o sin el arnés en altura.\n• Intervenir un equipo sin aplicar bloqueo y etiquetado.\n• Ingresar a una zona restringida o señalizada.\n• Retirar una guarda de protección para ganar tiempo.\n• Transportar personal en un equipo no diseñado para ello."
+            },
+            {
+              "heading": "El error de detenerse aquí",
+              "body": "Cuando una investigación concluye en «el trabajador no usó su EPP», suele haberse detenido demasiado pronto. Detrás de casi todo acto inseguro repetido hay una causa de sistema: un procedimiento que no se puede cumplir en el tiempo asignado, un EPP incómodo o mal tallado, una supervisión que premia la producción por encima del método, o un entrenamiento que nunca se dio.\n\nCulpar al trabajador cierra el informe pero no cambia nada: el siguiente turno repetirá el acto. Un control eficaz actúa sobre la condición que hace probable el acto."
+            }
+          ],
+          "miningExample": "Un perforista trabaja sin protección auditiva. El acto inseguro es visible. Pero al preguntar aparece que los tapones se entregan al inicio de mes y se acabaron hace dos semanas. El control no es sancionar: es reponer el stock y verificar la entrega.",
+          "check": {
+            "prompt": "En una investigación, la causa registrada es «el trabajador no usó protección auditiva». ¿Qué falta?",
+            "options": [
+              "Nada, la causa está identificada",
+              "Determinar por qué no la usó, para actuar sobre la causa de sistema",
+              "Aplicar una sanción disciplinaria"
+            ],
+            "correctIndex": 1,
+            "explanation": "El acto inseguro es el hecho observable, no la causa raíz. Sin preguntar por qué ocurrió no hay control eficaz, y el mismo acto se repetirá con otro trabajador."
+          }
+        },
+        {
+          "id": "condicion-insegura",
+          "title": "Condición insegura",
+          "summary": "Una condición del entorno de trabajo que está fuera del estándar.",
+          "sections": [
+            {
+              "heading": "Definición",
+              "body": "Condición existente en el entorno de trabajo que se encuentra fuera del estándar y que puede causar un accidente.\n\nA diferencia del acto inseguro, no depende de lo que haga una persona en ese momento: está en la instalación, el equipo o el ambiente, y afecta a todo el que pase por ahí."
+            },
+            {
+              "heading": "Ejemplos en minería",
+              "body": "• Sostenimiento deficiente, ausente o vencido en una labor.\n• Cables eléctricos expuestos o tendidos sobre el piso.\n• Derrames de aceite, grasa o lodo en vías de tránsito.\n• Falta de señalización en labores clausuradas o zonas de riesgo.\n• Iluminación insuficiente en vías de acceso.\n• Ventilación deficiente o cortocircuito de aire.\n• Escaleras, barandas o plataformas en mal estado.\n• Acumulación de material sobre las vías."
+            },
+            {
+              "heading": "Por qué se prioriza sobre el acto",
+              "body": "Una condición insegura expone a todos los que pasan, no solo a quien cometió un error. Y se corrige con una acción física verificable: colocar el sostenimiento, suspender el cable, señalizar la zona.\n\nPor eso, cuando aparecen a la vez un acto y una condición, corregir la condición suele rendir más: elimina la exposición de todo el personal de una sola vez."
+            }
+          ],
+          "miningExample": "En una rampa, el agua de filtración forma un tramo de lodo sin drenaje ni señalización. Es una condición insegura: afecta a todo equipo y persona que transite, en todos los turnos, hasta que alguien la corrija.",
+          "check": {
+            "prompt": "Un trabajador cruza por debajo de una carga suspendida en una zona sin delimitar. ¿Qué hay?",
+            "options": [
+              "Solo un acto inseguro",
+              "Solo una condición insegura",
+              "Ambos: el acto de cruzar y la condición de la zona sin delimitar"
+            ],
+            "correctIndex": 2,
+            "explanation": "Coexisten. Delimitar y señalizar la zona es la condición a corregir, y actúa sobre todo el personal; la conversación sobre el acto solo alcanza a quien cruzó."
+          }
+        },
+        {
+          "id": "jerarquia-controles",
+          "title": "Jerarquía de controles",
+          "summary": "Cinco niveles ordenados por eficacia. El EPP es el último, no el primero.",
+          "diagram": "control_hierarchy",
+          "sections": [
+            {
+              "heading": "Los cinco niveles",
+              "body": "1. Eliminación. Se retira el peligro. Es el único control definitivo.\n2. Sustitución. Se reemplaza por algo menos peligroso.\n3. Controles de ingeniería. Se aísla a la persona del peligro con una solución física.\n4. Controles administrativos. Se cambia la forma de trabajar: procedimientos, señalización, rotación, capacitación, permisos.\n5. Equipo de protección personal. Se protege a la persona en el punto de contacto."
+            },
+            {
+              "heading": "Por qué el orden no es negociable",
+              "body": "Los tres primeros niveles actúan sobre el peligro y siguen funcionando aunque la persona se distraiga. Los dos últimos actúan sobre la persona y dependen de que esta cumpla, cada vez, sin fallar.\n\nEl EPP además tiene tres debilidades propias: no reduce la energía del peligro, falla sin aviso previo, y protege solo a quien lo lleva puesto y bien ajustado.\n\nEso no lo hace inútil. Lo hace insuficiente como control principal. En la práctica se combinan varios niveles, pero un IPERC cuyo único control es EPP es una señal de que la evaluación se quedó a medias."
+            },
+            {
+              "heading": "Cómo se aplica",
+              "body": "Se recorre la lista de arriba hacia abajo y se descarta cada nivel solo cuando es realmente inviable, no cuando es incómodo o costoso a corto plazo.\n\nLa pregunta que ordena el análisis: ¿puedo evitar que la persona y el peligro coincidan? Si la respuesta es sí por medios físicos, no hace falta bajar al nivel administrativo."
+            }
+          ],
+          "miningExample": "Polvo respirable en la perforación.\n\n• Eliminación: no aplica, la perforación es necesaria.\n• Sustitución: perforación con inyección de agua en lugar de perforación en seco.\n• Ingeniería: ventilación localizada y captación de polvo en la fuente.\n• Administrativo: rotación del personal y control del tiempo de exposición.\n• EPP: respirador con filtro para partículas.\n\nLa perforación húmeda actúa sobre el peligro y protege a todos los que están en la labor. El respirador protege a uno, y solo mientras esté bien colocado.",
+          "check": {
+            "prompt": "Para el ruido de un ventilador principal, ¿cuál es el control más efectivo?",
+            "options": [
+              "Entregar tapones auditivos a todo el personal",
+              "Encapsular acústicamente el ventilador",
+              "Señalizar la zona como área de ruido"
+            ],
+            "correctIndex": 1,
+            "explanation": "El encapsulamiento es un control de ingeniería: reduce la energía acústica en la fuente y protege a todo el que pase, sin depender de la conducta de nadie. La señalización es administrativa y los tapones son EPP; ambos son complementos, no el control principal."
+          }
+        }
+      ]
+    },
+    {
+      "id": "iperc",
+      "title": "IPERC",
+      "description": "Identificación de Peligros, Evaluación de Riesgos y Controles. El método con el que se decide si una tarea se puede ejecutar y bajo qué condiciones.",
+      "topics": [
+        {
+          "id": "que-es-iperc",
+          "title": "Qué es el IPERC",
+          "summary": "El proceso que va de la actividad al riesgo residual, en seis pasos encadenados.",
+          "diagram": "iperc_flow",
+          "sections": [
+            {
+              "heading": "Definición",
+              "body": "Proceso sistemático para identificar los peligros, evaluar los riesgos y sus impactos, y determinar los controles necesarios para reducir el riesgo a un nivel tolerable.\n\nLa palabra sistemático es la que hace el trabajo: el IPERC no es una lista de lo que a uno le preocupa, sino un recorrido ordenado de la actividad, paso a paso, buscando en cada uno qué puede salir mal."
+            },
+            {
+              "heading": "La secuencia",
+              "body": "Actividad → Peligro → Riesgo → Evaluación → Control → Riesgo residual\n\nCada casilla depende de la anterior. Saltarse una es el error más común:\n\n• Saltar del peligro al control sin nombrar el riesgo lleva a elegir controles contra el objeto equivocado.\n• Saltar la evaluación impide priorizar: si todo parece igual de grave, se corrige lo más fácil en lugar de lo más urgente.\n• No calcular el riesgo residual deja sin responder la única pregunta que importa: después de todo esto, ¿se puede trabajar?"
+            },
+            {
+              "heading": "Los tres tipos",
+              "body": "• IPERC de línea base: el diagnóstico inicial de toda la operación. Se hace una vez y se actualiza.\n• IPERC específico: para una tarea concreta, un proyecto o un cambio de condiciones.\n• IPERC continuo: el que hace la propia cuadrilla antes de empezar la tarea, en el lugar de trabajo y con las condiciones de ese momento.\n\nEl continuo es el que un estudiante hará primero en sus prácticas, y el que más vidas depende de que se haga en serio y no como trámite de firma."
+            }
+          ],
+          "miningExample": "Actividad: perforación en una labor subterránea.\nPeligro: roca fracturada sin sostenimiento en el techo.\nRiesgo: caída de roca sobre el perforista, con consecuencia mortal.\nEvaluación: severidad Mortalidad, probabilidad Ha sucedido → índice 5 → riesgo Alto.\nControl: desatado y sostenimiento antes de perforar, más verificación por el supervisor.\nRiesgo residual: severidad Mortalidad, probabilidad Raro que suceda → índice 12 → riesgo Medio.",
+          "check": {
+            "prompt": "¿Cuál de estos IPERC está mal construido?",
+            "options": [
+              "Peligro: cable expuesto → Riesgo: electrocución → Control: suspender el cable en altura",
+              "Peligro: electrocución → Control: usar guantes dieléctricos",
+              "Peligro: roca suelta → Riesgo: caída de roca sobre el personal → Control: desatado"
+            ],
+            "correctIndex": 1,
+            "explanation": "El segundo nombra como peligro la consecuencia (electrocución), se salta el riesgo y elige el control más débil de la jerarquía. El peligro es el conductor energizado accesible; el control debería empezar por desenergizar y bloquear."
+          }
+        },
+        {
+          "id": "identificacion",
+          "title": "Identificación de peligros",
+          "summary": "Recorrer la tarea paso a paso y preguntar en cada uno qué energía está presente.",
+          "sections": [
+            {
+              "heading": "El método",
+              "body": "1. Descomponer la actividad en pasos concretos, en el orden real en que se ejecutan.\n2. En cada paso, preguntar qué energías intervienen y qué puede liberarse fuera de control.\n3. Considerar también las condiciones del entorno: ventilación, iluminación, terreno, tránsito de equipos, clima.\n4. Incluir lo que puede fallar, no solo lo que suele fallar."
+            },
+            {
+              "heading": "De dónde sale la información",
+              "body": "• La observación directa de la tarea, en el lugar y en el turno en que se hace.\n• Los incidentes y accidentes previos de esa labor o de labores similares.\n• Los procedimientos escritos de trabajo seguro y los estándares de la operación.\n• La experiencia de quien ejecuta la tarea. Es la fuente que más se desaprovecha."
+            },
+            {
+              "heading": "Errores frecuentes",
+              "body": "• Copiar el IPERC de otra labor. Las condiciones cambian entre labores y entre turnos.\n• Listar solo los peligros del propio trabajo e ignorar los que aportan otros: la voladura del nivel superior, el equipo que transita por la misma vía.\n• Confundir el peligro con la consecuencia.\n• Quedarse con lo que se ve. La ventilación deficiente y el gas no se ven."
+            }
+          ],
+          "miningExample": "En la tarea «cambio de barreno en el frente», los pasos son: ingresar a la labor, verificar el techo, detener y bloquear la perforadora, retirar el barreno, colocar el nuevo, reanudar. Cada paso aporta peligros distintos: roca suelta al ingresar, energía neumática almacenada al intervenir el equipo, atrapamiento entre partes móviles al manipular el barreno, y ruido durante toda la tarea.",
+          "check": {
+            "prompt": "Se va a hacer el IPERC continuo de una labor. El IPERC de la labor vecina, con la misma actividad, ya está firmado. ¿Se puede usar?",
+            "options": [
+              "Sí, es la misma actividad",
+              "No, las condiciones del terreno, la ventilación y el tránsito cambian entre labores",
+              "Sí, si el supervisor lo autoriza"
+            ],
+            "correctIndex": 1,
+            "explanation": "El IPERC continuo evalúa las condiciones de esa labor en ese momento. Copiarlo convierte el análisis en un trámite de firma y hace invisibles justo los peligros que diferencian una labor de otra."
+          }
+        },
+        {
+          "id": "evaluacion",
+          "title": "Evaluación del riesgo",
+          "summary": "Severidad y probabilidad se cruzan en una matriz de doble entrada. No se multiplican.",
+          "diagram": "risk_matrix",
+          "sections": [
+            {
+              "heading": "Severidad",
+              "body": "Qué tan grave sería el daño si el riesgo se materializara. Cinco categorías, de la más grave a la más leve:\n\n1. Catastrófico: varias fatalidades o varias personas con lesiones permanentes.\n2. Mortalidad: una fatalidad o estado vegetal.\n3. Permanente: lesiones incapacitantes de carácter permanente.\n4. Temporal: lesiones que requieren descanso médico y permiten el retorno.\n5. Menor: lesión que no requiere descanso médico."
+            },
+            {
+              "heading": "Probabilidad",
+              "body": "Con qué frecuencia se espera que ocurra, evaluada sobre las condiciones reales de la labor:\n\n1. Común: sucede con demasiada frecuencia.\n2. Ha sucedido: sucede con frecuencia.\n3. Podría suceder: sucede ocasionalmente.\n4. Raro que suceda: rara vez ocurre.\n5. Prácticamente imposible que suceda."
+            },
+            {
+              "heading": "El cruce",
+              "body": "La matriz del Anexo 7 del D.S. 024-2016-EM entrega un índice del 1 al 25, donde 1 es lo más grave. Ese índice se lee en la tabla; no se obtiene multiplicando.\n\nLa distinción no es un detalle académico: multiplicar daría un orden distinto y llevaría a priorizar mal las correcciones.\n\nNiveles y plazos de corrección:\n\n• Alto, índice 1 a 8. Corregir entre 0 y 24 horas.\n• Medio, índice 9 a 16. Corregir entre 0 y 72 horas.\n• Bajo, índice 17 a 25. Corregir en un plazo de un mes.\n\nUn riesgo Alto no autoriza a trabajar mientras no se corrija."
+            }
+          ],
+          "miningExample": "Caída de roca sobre el perforista en una labor con techo fracturado y antecedentes de desprendimientos en el nivel.\n\nSeveridad: Mortalidad, porque una roca del tamaño observado sobre una persona produce una fatalidad.\nProbabilidad: Ha sucedido, porque ya ocurrió en el mismo nivel.\n\nCruce en la matriz: índice 5. Nivel Alto. Plazo de corrección: 0 a 24 horas, y la labor no se opera hasta corregir.",
+          "check": {
+            "prompt": "Severidad Mortalidad y probabilidad Podría suceder dan índice 8. ¿Qué nivel y qué plazo corresponden?",
+            "options": [
+              "Medio, corregir en 72 horas",
+              "Alto, corregir en 24 horas",
+              "Bajo, corregir en un mes"
+            ],
+            "correctIndex": 1,
+            "explanation": "El nivel Alto abarca los índices del 1 al 8, así que el 8 todavía es Alto y exige corrección dentro de las 24 horas. Es un borde fácil de equivocar: el 9 ya sería Medio."
+          }
+        },
+        {
+          "id": "controles-iperc",
+          "title": "Determinación de controles",
+          "summary": "Un control es una acción concreta, verificable, con responsable y plazo.",
+          "diagram": "control_hierarchy",
+          "sections": [
+            {
+              "heading": "Qué es y qué no es un control",
+              "body": "Un control es una medida que reduce la probabilidad de que el riesgo ocurra, la severidad de su consecuencia, o ambas.\n\nNo son controles: «tener cuidado», «estar atento», «trabajar con precaución», «capacitar al personal» sin decir en qué ni cuándo. Son intenciones. No se pueden verificar y no cambian nada en la labor.\n\nUn control admisible responde a tres preguntas: qué se hace exactamente, quién lo hace y para cuándo."
+            },
+            {
+              "heading": "Se aplica la jerarquía",
+              "body": "Se recorre de arriba hacia abajo: eliminación, sustitución, ingeniería, administrativo, EPP. Cada nivel se descarta solo cuando es inviable de verdad.\n\nEn la práctica se combinan. Lo que no es admisible es saltar directamente al EPP porque es lo más rápido de escribir."
+            },
+            {
+              "heading": "Ejemplo de reescritura",
+              "body": "Control insuficiente: «usar EPP y tener cuidado con el techo».\n\nControl admisible: «desatar el techo con barretilla desde zona segura antes de ingresar al frente, colocar pernos de anclaje según el estándar de sostenimiento del nivel, y verificar por el supervisor de guardia antes de autorizar la perforación».\n\nLa segunda versión se puede comprobar. La primera no."
+            }
+          ],
+          "miningExample": "Riesgo: contacto eléctrico del personal con un cable expuesto en la vía.\n\n• Ingeniería: suspender el cable en altura con soportes aislados. Actúa sobre el peligro.\n• Administrativo: señalizar el tramo y restringir el paso mientras se corrige.\n• EPP: guantes dieléctricos para quien intervenga el cable.\n\nEl orden importa. Si el primero es viable, los otros dos son complemento, no sustituto.",
+          "check": {
+            "prompt": "¿Cuál de estos está redactado como un control admisible?",
+            "options": [
+              "Capacitar al personal en riesgos eléctricos",
+              "Tener cuidado al transitar por la zona del cable",
+              "Suspender el cable a 2.5 m con soportes aislados, a cargo del electricista de guardia, antes del inicio del turno"
+            ],
+            "correctIndex": 2,
+            "explanation": "Solo el tercero dice qué se hace, quién lo hace y cuándo, y por tanto se puede verificar. Además es un control de ingeniería que actúa sobre el peligro, no sobre la conducta."
+          }
+        },
+        {
+          "id": "riesgo-residual",
+          "title": "Riesgo residual",
+          "summary": "Lo que queda después de aplicar los controles. Nunca es cero.",
+          "diagram": "residual_risk",
+          "sections": [
+            {
+              "heading": "Qué es",
+              "body": "El nivel de riesgo que permanece una vez implementados los controles. Se evalúa con la misma matriz y con el mismo par severidad-probabilidad, pero sobre la situación ya controlada.\n\nNunca da cero. Un control reduce el riesgo; sostener que lo anula suele indicar que la reevaluación se hizo sobre el papel y no sobre la labor."
+            },
+            {
+              "heading": "Qué reduce cada control",
+              "body": "La mayoría de los controles bajan la probabilidad, no la severidad. El sostenimiento hace mucho menos probable la caída de roca, pero si cae, la consecuencia sigue siendo mortal.\n\nSolo la eliminación y la sustitución suelen mover la severidad, porque cambian la energía en juego.\n\nEsto explica por qué muchos riesgos altos bajan a medio pero no a bajo: se redujo una de las dos variables."
+            },
+            {
+              "heading": "La decisión final",
+              "body": "El riesgo residual es lo que responde si la tarea se ejecuta:\n\n• Residual Bajo o Medio: se puede trabajar con los controles implementados y verificados.\n• Residual Alto: la tarea no se ejecuta. Hay que reforzar los controles y volver a evaluar.\n\nY hay una condición previa que se olvida: el riesgo residual solo es válido si los controles están efectivamente implementados. Un control escrito y no ejecutado no reduce nada."
+            }
+          ],
+          "miningExample": "Caída de roca en el frente.\n\nInicial: severidad Mortalidad, probabilidad Ha sucedido → índice 5 → Alto.\nControles: desatado desde zona segura, pernos de anclaje según estándar y verificación del supervisor.\nResidual: severidad Mortalidad (si cae, sigue matando), probabilidad Raro que suceda → índice 12 → Medio.\n\nLa severidad no cambió, y no debía cambiar. Lo que cambió es cuán probable es que la roca caiga.",
+          "check": {
+            "prompt": "Tras aplicar sostenimiento, un equipo registra el riesgo residual de caída de rocas como severidad Menor. ¿Es correcto?",
+            "options": [
+              "Sí, el sostenimiento reduce el daño posible",
+              "No, el sostenimiento reduce la probabilidad; si la roca cae, la consecuencia sigue siendo mortal",
+              "Sí, siempre que el sostenimiento esté certificado"
+            ],
+            "correctIndex": 1,
+            "explanation": "Confundir qué variable mueve cada control es el error más común al calcular el residual. El sostenimiento evita que la roca caiga, pero no cambia lo que ocurre si cae. Bajar la severidad sin justificación produce un residual falsamente tranquilizador."
+          }
+        }
+      ]
+    }
+  ]
+}

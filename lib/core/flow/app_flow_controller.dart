@@ -16,12 +16,28 @@ class AppFlowState {
     this.hasCompletedIntro = false,
     this.hidesAcademicNotice = false,
     this.points = 0,
+    this.scenariosCompleted = 0,
+    this.hazardAccuracy = unmeasured,
+    this.ipercAccuracy = unmeasured,
   });
+
+  /// Valor de las metricas que aun no se han medido.
+  ///
+  /// Se distingue de cero a proposito: un estudiante que todavia no ha
+  /// evaluado nada no tiene una precision del 0 %, no tiene precision.
+  static const int unmeasured = -1;
 
   final bool hasSeenOnboarding;
   final bool hasCompletedIntro;
   final bool hidesAcademicNotice;
   final int points;
+  final int scenariosCompleted;
+
+  /// Porcentaje de aciertos identificando peligros.
+  final int hazardAccuracy;
+
+  /// Porcentaje de aciertos construyendo matrices IPERC.
+  final int ipercAccuracy;
 
   TraineeLevel get level => TraineeLevel.forPoints(points);
 
@@ -32,12 +48,18 @@ class AppFlowState {
     bool? hasCompletedIntro,
     bool? hidesAcademicNotice,
     int? points,
+    int? scenariosCompleted,
+    int? hazardAccuracy,
+    int? ipercAccuracy,
   }) {
     return AppFlowState(
       hasSeenOnboarding: hasSeenOnboarding ?? this.hasSeenOnboarding,
       hasCompletedIntro: hasCompletedIntro ?? this.hasCompletedIntro,
       hidesAcademicNotice: hidesAcademicNotice ?? this.hidesAcademicNotice,
       points: points ?? this.points,
+      scenariosCompleted: scenariosCompleted ?? this.scenariosCompleted,
+      hazardAccuracy: hazardAccuracy ?? this.hazardAccuracy,
+      ipercAccuracy: ipercAccuracy ?? this.ipercAccuracy,
     );
   }
 }
@@ -49,6 +71,9 @@ abstract final class AppFlowKeys {
   static const String completedIntro = 'flow.completedIntro';
   static const String hidesNotice = 'flow.hidesAcademicNotice';
   static const String points = 'flow.points';
+  static const String scenarios = 'flow.scenariosCompleted';
+  static const String hazardAccuracy = 'flow.hazardAccuracy';
+  static const String ipercAccuracy = 'flow.ipercAccuracy';
 }
 
 class AppFlowController extends Notifier<AppFlowState> {
@@ -64,6 +89,15 @@ class AppFlowController extends Notifier<AppFlowState> {
       hasCompletedIntro: repository.readBool(AppFlowKeys.completedIntro),
       hidesAcademicNotice: repository.readBool(AppFlowKeys.hidesNotice),
       points: repository.readInt(AppFlowKeys.points),
+      scenariosCompleted: repository.readInt(AppFlowKeys.scenarios),
+      hazardAccuracy: repository.readInt(
+        AppFlowKeys.hazardAccuracy,
+        fallback: AppFlowState.unmeasured,
+      ),
+      ipercAccuracy: repository.readInt(
+        AppFlowKeys.ipercAccuracy,
+        fallback: AppFlowState.unmeasured,
+      ),
     );
   }
 
@@ -79,12 +113,25 @@ class AppFlowController extends Notifier<AppFlowState> {
   Future<void> completeIntroMission({required int score}) async {
     final first = !state.hasCompletedIntro;
     final points = first ? state.points + score : state.points;
+    final scenarios = first
+        ? state.scenariosCompleted + 1
+        : state.scenariosCompleted;
 
-    state = state.copyWith(hasCompletedIntro: true, points: points);
+    // La precision refleja el ultimo intento, tambien al repetir: sirve para
+    // ver si el estudiante mejoro, y congelarla en el primer intento
+    // convertiria la practica en algo sin efecto visible.
+    state = state.copyWith(
+      hasCompletedIntro: true,
+      points: points,
+      scenariosCompleted: scenarios,
+      hazardAccuracy: score,
+    );
 
     await _repository.writeBool(AppFlowKeys.completedIntro, value: true);
+    await _repository.writeInt(AppFlowKeys.hazardAccuracy, score);
     if (first) {
       await _repository.writeInt(AppFlowKeys.points, points);
+      await _repository.writeInt(AppFlowKeys.scenarios, scenarios);
     }
   }
 

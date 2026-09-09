@@ -100,13 +100,13 @@ void main() {
     await _skipSplash(tester);
 
     expect(
-      find.text('Bienvenido al Centro de Entrenamiento Minero'),
+      find.text('Centro de Entrenamiento en Seguridad Minera'),
       findsOneWidget,
     );
-    // La pestana de escenarios muestra la misma ficha, pero el IndexedStack
-    // la mantiene fuera de pantalla y `find` ignora lo que esta offstage:
-    // aqui solo debe aparecer la del inicio.
-    expect(find.text('Iniciar escenario'), findsOneWidget);
+    // El ciclo empieza por aprender: la tarjeta destacada del inicio lleva a
+    // la biblioteca, no directamente a un escenario.
+    expect(find.text('Tu progreso'), findsOneWidget);
+    expect(find.text('Continuar'), findsOneWidget);
   });
 
   testWidgets('el aviso academico es una tarjeta descartable, no un muro',
@@ -117,10 +117,10 @@ void main() {
     );
     await _skipSplash(tester);
 
-    // Lo que se comprueba aqui es que el aviso convive con la mision en vez
-    // de ocupar la pantalla entera, como hacia antes.
+    // Lo que se comprueba aqui es que el aviso convive con el resto del
+    // centro de entrenamiento en vez de ocupar la pantalla entera.
     expect(find.textContaining('fines educativos'), findsOneWidget);
-    expect(find.text('Iniciar escenario'), findsOneWidget);
+    expect(find.text('Tu progreso'), findsOneWidget);
 
     await tester.ensureVisible(find.text('Entendido'));
     await tester.pump();

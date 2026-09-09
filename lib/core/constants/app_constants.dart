@@ -11,6 +11,7 @@ abstract final class AppConstants {
 
   /// Rutas del contenido empaquetado.
   static const String i18nPath = 'assets/i18n';
+  static const String libraryPath = 'assets/content/library.json';
   static const String scenarioIndexPath = 'assets/content/scenarios/index.json';
   static const String scenarioDir = 'assets/content/scenarios';
 
