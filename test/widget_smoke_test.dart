@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' show Size;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -32,11 +33,21 @@ AppStrings _realStrings() {
 /// El repositorio real usa canales de plataforma, que no existen en un test
 /// de widget. Sobrescribirlo aqui es la razon por la que el provider no trae
 /// implementacion por defecto.
+///
+/// La ventana se fija en 360x800 puntos, un telefono vertical corriente. El
+/// tamano por defecto del entorno de pruebas es 800x600, apaisado: probar
+/// ahi una app bloqueada en vertical mide una disposicion que nunca se va a
+/// ejecutar, y esconde los desbordamientos que aparecen en una pantalla
+/// estrecha.
 Future<void> _pumpApp(
   WidgetTester tester, {
   Map<String, Object> seed = const <String, Object>{},
 }) async {
   final strings = _realStrings();
+
+  tester.view.physicalSize = const Size(1080, 2400);
+  tester.view.devicePixelRatio = 3;
+  addTearDown(tester.view.reset);
 
   await tester.pumpWidget(
     ProviderScope(
@@ -92,9 +103,10 @@ void main() {
       find.text('Bienvenido al Centro de Entrenamiento Minero'),
       findsOneWidget,
     );
-    // IndexedStack construye tambien la pestana de escenarios, que muestra
-    // la misma ficha: por eso se esperan varias coincidencias.
-    expect(find.text('Iniciar escenario'), findsWidgets);
+    // La pestana de escenarios muestra la misma ficha, pero el IndexedStack
+    // la mantiene fuera de pantalla y `find` ignora lo que esta offstage:
+    // aqui solo debe aparecer la del inicio.
+    expect(find.text('Iniciar escenario'), findsOneWidget);
   });
 
   testWidgets('el aviso academico es una tarjeta descartable, no un muro',
@@ -105,16 +117,20 @@ void main() {
     );
     await _skipSplash(tester);
 
-    // Convive con la mision: no ocupa la pantalla el solo.
+    // Lo que se comprueba aqui es que el aviso convive con la mision en vez
+    // de ocupar la pantalla entera, como hacia antes.
     expect(find.textContaining('fines educativos'), findsOneWidget);
-    expect(find.text('Iniciar escenario'), findsWidgets);
+    expect(find.text('Iniciar escenario'), findsOneWidget);
 
     await tester.ensureVisible(find.text('Entendido'));
     await tester.pump();
     await tester.tap(find.text('Entendido'));
     await tester.pump();
 
+    // Solo se comprueba la desaparicion de la tarjeta. Volver a buscar la
+    // ficha de mision no serviria: `ensureVisible` puede haber desplazado la
+    // lista, y `find` ignora lo que quedo fuera del viewport.
     expect(find.textContaining('fines educativos'), findsNothing);
-    expect(find.text('Iniciar escenario'), findsWidgets);
+    expect(find.text('Entendido'), findsNothing);
   });
 }
