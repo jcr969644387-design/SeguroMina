@@ -7,15 +7,6 @@ import '../../../../domain/iperc/iperc_evaluation.dart';
 import '../../../../domain/iperc/risk_assessment.dart';
 import '../../../library/widgets/technical_diagrams.dart';
 
-/// Cambio de una de las dos variables de la evaluacion.
-///
-/// Se pasan las dos como opcionales para que el llamante actualice solo la
-/// que el estudiante acaba de tocar.
-typedef MatrixSelection = void Function({
-  Severity? severity,
-  Probability? probability,
-});
-
 /// Fila seleccionable de una lista de opciones.
 ///
 /// Sirve tanto para seleccion multiple como para eleccion unica: quien la usa
@@ -105,7 +96,8 @@ class MatrixPicker extends StatelessWidget {
     required this.severity,
     required this.probability,
     required this.locked,
-    required this.onChanged,
+    required this.onSeverity,
+    required this.onProbability,
     super.key,
   });
 
@@ -113,7 +105,8 @@ class MatrixPicker extends StatelessWidget {
   final Severity? severity;
   final Probability? probability;
   final bool locked;
-  final MatrixSelection onChanged;
+  final ValueChanged<Severity?> onSeverity;
+  final ValueChanged<Probability?> onProbability;
 
   @override
   Widget build(BuildContext context) {
@@ -131,9 +124,7 @@ class MatrixPicker extends StatelessWidget {
         DropdownButton<Severity>(
           value: chosenSeverity,
           isExpanded: true,
-          onChanged: locked
-              ? null
-              : (Severity? value) => onChanged(severity: value),
+          onChanged: locked ? null : onSeverity,
           items: <DropdownMenuItem<Severity>>[
             for (final value in Severity.values)
               DropdownMenuItem<Severity>(
@@ -150,9 +141,7 @@ class MatrixPicker extends StatelessWidget {
         DropdownButton<Probability>(
           value: chosenProbability,
           isExpanded: true,
-          onChanged: locked
-              ? null
-              : (Probability? value) => onChanged(probability: value),
+          onChanged: locked ? null : onProbability,
           items: <DropdownMenuItem<Probability>>[
             for (final value in Probability.values)
               DropdownMenuItem<Probability>(

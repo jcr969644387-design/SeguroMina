@@ -104,15 +104,24 @@ class IpercPracticeViewModel extends AutoDisposeNotifier<IpercPracticeState> {
     );
   }
 
-  void setAssessment({Severity? severity, Probability? probability}) {
-    if (state.checked) {
+  /// Cuatro asignadores de una sola variable en vez de uno con parametros
+  /// con nombre: asi los desplegables reciben la referencia directa al metodo
+  /// y la pantalla no necesita envolverlos en funciones anonimas.
+  void setSeverity(Severity? value) {
+    if (state.checked || value == null) {
       return;
     }
     state = state.copyWith(
-      attempt: state.attempt.copyWith(
-        severity: severity,
-        probability: probability,
-      ),
+      attempt: state.attempt.copyWith(severity: value),
+    );
+  }
+
+  void setProbability(Probability? value) {
+    if (state.checked || value == null) {
+      return;
+    }
+    state = state.copyWith(
+      attempt: state.attempt.copyWith(probability: value),
     );
   }
 
@@ -127,15 +136,21 @@ class IpercPracticeViewModel extends AutoDisposeNotifier<IpercPracticeState> {
     state = state.copyWith(attempt: state.attempt.copyWith(controls: next));
   }
 
-  void setResidual({Severity? severity, Probability? probability}) {
-    if (state.checked) {
+  void setResidualSeverity(Severity? value) {
+    if (state.checked || value == null) {
       return;
     }
     state = state.copyWith(
-      attempt: state.attempt.copyWith(
-        residualSeverity: severity,
-        residualProbability: probability,
-      ),
+      attempt: state.attempt.copyWith(residualSeverity: value),
+    );
+  }
+
+  void setResidualProbability(Probability? value) {
+    if (state.checked || value == null) {
+      return;
+    }
+    state = state.copyWith(
+      attempt: state.attempt.copyWith(residualProbability: value),
     );
   }
 

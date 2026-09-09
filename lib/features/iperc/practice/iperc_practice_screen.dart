@@ -182,7 +182,8 @@ class _StepContent extends StatelessWidget {
           severity: state.attempt.severity,
           probability: state.attempt.probability,
           locked: state.checked,
-          onChanged: viewModel.setAssessment,
+          onSeverity: viewModel.setSeverity,
+          onProbability: viewModel.setProbability,
         );
 
       case IpercStep.controls:
@@ -205,7 +206,8 @@ class _StepContent extends StatelessWidget {
           severity: state.attempt.residualSeverity,
           probability: state.attempt.residualProbability,
           locked: state.checked,
-          onChanged: viewModel.setResidual,
+          onSeverity: viewModel.setResidualSeverity,
+          onProbability: viewModel.setResidualProbability,
         );
     }
   }
