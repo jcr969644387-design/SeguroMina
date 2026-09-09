@@ -223,7 +223,7 @@ class _StepBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final steps = IpercStep.values;
+    const steps = IpercStep.values;
     final safeIndex = current.clamp(0, steps.length - 1);
 
     return Padding(
