@@ -87,6 +87,20 @@ jobs:
           flutter create --platforms=android --org "$APP_ORG" \
             --project-name seguromina .
 
+      # `flutter create` toma el rotulo del lanzador del nombre del paquete
+      # Dart, que va en minuscula por exigencia de Dart. El estudiante veia
+      # "seguromina" bajo el icono y en el conmutador de aplicaciones.
+      # El grep no es decorativo: si una version futura de Flutter cambia la
+      # plantilla, el build falla aqui en vez de publicar el rotulo mal.
+      - name: Corregir el nombre visible de la aplicacion
+        run: |
+          set -euo pipefail
+          manifest=android/app/src/main/AndroidManifest.xml
+          sed -i 's/android:label="seguromina"/android:label="SeguroMina"/' \
+            "$manifest"
+          grep -q 'android:label="SeguroMina"' "$manifest"
+          echo "Rotulo del lanzador: SeguroMina"
+
       - name: Compilar APK release
         run: flutter build apk --release
 

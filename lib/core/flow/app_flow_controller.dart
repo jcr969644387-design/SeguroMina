@@ -19,6 +19,7 @@ class AppFlowState {
     this.scenariosCompleted = 0,
     this.hazardAccuracy = unmeasured,
     this.ipercAccuracy = unmeasured,
+    this.completedTopics = const <String>{},
   });
 
   /// Valor de las metricas que aun no se han medido.
@@ -39,6 +40,9 @@ class AppFlowState {
   /// Porcentaje de aciertos construyendo matrices IPERC.
   final int ipercAccuracy;
 
+  /// Fichas de la biblioteca cuya pregunta de comprobacion ya se respondio.
+  final Set<String> completedTopics;
+
   TraineeLevel get level => TraineeLevel.forPoints(points);
 
   double get levelProgress => TraineeLevel.progressForPoints(points);
@@ -51,6 +55,7 @@ class AppFlowState {
     int? scenariosCompleted,
     int? hazardAccuracy,
     int? ipercAccuracy,
+    Set<String>? completedTopics,
   }) {
     return AppFlowState(
       hasSeenOnboarding: hasSeenOnboarding ?? this.hasSeenOnboarding,
@@ -60,6 +65,7 @@ class AppFlowState {
       scenariosCompleted: scenariosCompleted ?? this.scenariosCompleted,
       hazardAccuracy: hazardAccuracy ?? this.hazardAccuracy,
       ipercAccuracy: ipercAccuracy ?? this.ipercAccuracy,
+      completedTopics: completedTopics ?? this.completedTopics,
     );
   }
 }
@@ -74,6 +80,7 @@ abstract final class AppFlowKeys {
   static const String scenarios = 'flow.scenariosCompleted';
   static const String hazardAccuracy = 'flow.hazardAccuracy';
   static const String ipercAccuracy = 'flow.ipercAccuracy';
+  static const String completedTopics = 'flow.completedTopics';
 }
 
 class AppFlowController extends Notifier<AppFlowState> {
@@ -84,6 +91,8 @@ class AppFlowController extends Notifier<AppFlowState> {
   @override
   AppFlowState build() {
     final repository = ref.watch(preferencesRepositoryProvider);
+    final topics = repository.readStringList(AppFlowKeys.completedTopics);
+
     return AppFlowState(
       hasSeenOnboarding: repository.readBool(AppFlowKeys.seenOnboarding),
       hasCompletedIntro: repository.readBool(AppFlowKeys.completedIntro),
@@ -98,6 +107,27 @@ class AppFlowController extends Notifier<AppFlowState> {
         AppFlowKeys.ipercAccuracy,
         fallback: AppFlowState.unmeasured,
       ),
+      completedTopics: topics.toSet(),
+    );
+  }
+
+  /// Marca una ficha de la biblioteca como estudiada.
+  ///
+  /// Antes esto vivia en el estado del widget de la pregunta, asi que al
+  /// salir de la ficha se perdia y la pregunta volvia a aparecer sin
+  /// responder. Ahora persiste, y con ella el avance por la biblioteca que
+  /// muestra la pantalla de progreso.
+  Future<void> markTopicCompleted(String topicId) async {
+    if (state.completedTopics.contains(topicId)) {
+      return;
+    }
+
+    final next = <String>{...state.completedTopics, topicId};
+    state = state.copyWith(completedTopics: next);
+
+    await _repository.writeStringList(
+      AppFlowKeys.completedTopics,
+      next.toList(),
     );
   }
 

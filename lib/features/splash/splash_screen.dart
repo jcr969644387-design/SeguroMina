@@ -99,7 +99,6 @@ class _SplashContent extends StatelessWidget {
     final theme = Theme.of(context);
     final markIn = Curves.easeOutCubic.transform(_interval(0, 0.35));
     final textIn = Curves.easeOut.transform(_interval(0.25, 0.6));
-    final shine = _interval(0.4, 0.85);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
@@ -110,11 +109,7 @@ class _SplashContent extends StatelessWidget {
             opacity: markIn,
             child: Transform.scale(
               scale: 0.88 + 0.12 * markIn,
-              child: SeguroMinaMark(
-                size: 132,
-                onDark: onDark,
-                shine: shine > 0 && shine < 1 ? shine : 0,
-              ),
+              child: SeguroMinaMark(size: 132, onDark: onDark),
             ),
           ),
           const SizedBox(height: AppSpacing.lg),

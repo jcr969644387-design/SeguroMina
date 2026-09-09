@@ -12,6 +12,9 @@ abstract interface class PreferencesRepository {
 
   int readInt(String key, {int fallback = 0});
   Future<void> writeInt(String key, int value);
+
+  List<String> readStringList(String key);
+  Future<void> writeStringList(String key, List<String> value);
 }
 
 /// Implementacion sobre `shared_preferences`.
@@ -42,6 +45,16 @@ class SharedPreferencesRepository implements PreferencesRepository {
   Future<void> writeInt(String key, int value) {
     return _prefs.setInt(key, value);
   }
+
+  @override
+  List<String> readStringList(String key) {
+    return _prefs.getStringList(key) ?? const <String>[];
+  }
+
+  @override
+  Future<void> writeStringList(String key, List<String> value) {
+    return _prefs.setStringList(key, value);
+  }
 }
 
 /// Implementacion en memoria para tests y para el modo de demostracion.
@@ -70,6 +83,17 @@ class InMemoryPreferencesRepository implements PreferencesRepository {
 
   @override
   Future<void> writeInt(String key, int value) async {
+    _values[key] = value;
+  }
+
+  @override
+  List<String> readStringList(String key) {
+    final value = _values[key];
+    return value is List<String> ? value : const <String>[];
+  }
+
+  @override
+  Future<void> writeStringList(String key, List<String> value) async {
     _values[key] = value;
   }
 }

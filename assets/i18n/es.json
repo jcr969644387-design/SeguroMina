@@ -71,8 +71,6 @@
   "nav.profile": "Perfil",
 
 
-  "comingSoon.title": "En construcción",
-  "comingSoon.body": "Este módulo llega en una próxima versión. Mientras tanto, practica con la misión de entrada.",
 
   "risk.bajo.range": "17-25",
   "risk.medio.range": "9-16",
@@ -206,6 +204,22 @@
   "topic.checkCorrect": "Correcto",
   "topic.checkIncorrect": "Revisa el concepto",
   "topic.checkAgain": "Intentar de nuevo",
+
+  "progress.levelTitle": "Nivel actual",
+  "progress.nextLevel": "Faltan {puntos} pts para {nivel}",
+  "progress.maxLevel": "Nivel máximo alcanzado",
+  "progress.accuracyTitle": "Precisión por tipo de tarea",
+  "progress.libraryTitle": "Recorrido por la biblioteca",
+  "progress.libraryCount": "{leidas} de {total} fichas estudiadas",
+  "progress.scenariosTitle": "Escenarios",
+  "progress.scenarioCount": "{hechos} de {total} completados",
+
+  "profile.textSizeHint": "Se multiplica por el ajuste del sistema y se acota para que la pantalla de inspección siga siendo utilizable.",
+  "profile.contentTitle": "Contenido y fuente",
+  "profile.contentPending": "Pendiente de validación por un especialista en seguridad minera.",
+  "profile.contentValidated": "Validado por un especialista en seguridad minera.",
+
+  "library.completed": "Estudiada",
 
   "home.subtitle": "Centro de Entrenamiento en Seguridad Minera",
   "home.progressTitle": "Tu progreso",

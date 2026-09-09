@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/flow/app_flow_controller.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
@@ -64,7 +67,11 @@ class TopicScreen extends ConsumerWidget {
           ),
           if (topic.check != null) ...<Widget>[
             const SizedBox(height: AppSpacing.lg),
-            CheckQuestionCard(question: topic.check!, strings: strings),
+            CheckQuestionCard(
+              topicId: topic.id,
+              question: topic.check!,
+              strings: strings,
+            ),
           ],
         ],
       ),
@@ -109,33 +116,55 @@ class _ExampleCard extends StatelessWidget {
 /// Muestra la explicacion tanto si se acierta como si no. La explicacion es
 /// el contenido de la pregunta, no la recompensa por acertar: quien acerto
 /// por eliminacion tambien necesita leer por que.
-class CheckQuestionCard extends StatefulWidget {
+class CheckQuestionCard extends ConsumerStatefulWidget {
   const CheckQuestionCard({
+    required this.topicId,
     required this.question,
     required this.strings,
     super.key,
   });
 
+  final String topicId;
   final CheckQuestion question;
   final AppStrings strings;
 
   @override
-  State<CheckQuestionCard> createState() => _CheckQuestionCardState();
+  ConsumerState<CheckQuestionCard> createState() => _CheckQuestionCardState();
 }
 
-class _CheckQuestionCardState extends State<CheckQuestionCard> {
+class _CheckQuestionCardState extends ConsumerState<CheckQuestionCard> {
+  /// Respuesta de esta visita. Nula mientras no se haya tocado nada.
   int? _selected;
 
-  bool get _answered => _selected != null;
+  int? _current(bool completed) {
+    if (_selected != null) {
+      return _selected;
+    }
+    // Una ficha ya superada se reabre resuelta, con la explicacion visible.
+    // Antes esto vivia solo en el estado del widget, asi que al salir de la
+    // pantalla se perdia y la pregunta reaparecia sin responder.
+    return completed ? widget.question.correctIndex : null;
+  }
 
-  bool get _isCorrect {
-    return _selected != null && widget.question.isCorrect(_selected!);
+  void _answer(int index) {
+    setState(() => _selected = index);
+    if (widget.question.isCorrect(index)) {
+      unawaited(
+        ref.read(appFlowProvider.notifier).markTopicCompleted(widget.topicId),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final question = widget.question;
+    final flow = ref.watch(appFlowProvider);
+    final completed = flow.completedTopics.contains(widget.topicId);
+
+    final selected = _current(completed);
+    final answered = selected != null;
+    final isCorrect = selected != null && question.isCorrect(selected);
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
@@ -156,23 +185,23 @@ class _CheckQuestionCardState extends State<CheckQuestionCard> {
           for (int i = 0; i < question.options.length; i++) ...<Widget>[
             _Option(
               text: question.options[i],
-              state: _stateFor(i),
-              onTap: _answered ? null : () => setState(() => _selected = i),
+              state: _stateFor(i, selected),
+              onTap: answered ? null : () => _answer(i),
             ),
             const SizedBox(height: AppSpacing.sm),
           ],
-          if (_answered) ...<Widget>[
+          if (answered) ...<Widget>[
             const SizedBox(height: AppSpacing.xs),
             Row(
               children: <Widget>[
                 Icon(
-                  _isCorrect ? Icons.check_circle_outline : Icons.info_outline,
+                  isCorrect ? Icons.check_circle_outline : Icons.info_outline,
                   size: 18,
-                  color: _isCorrect ? AppColors.riskLow : AppColors.riskMedium,
+                  color: isCorrect ? AppColors.riskLow : AppColors.riskMedium,
                 ),
                 const SizedBox(width: AppSpacing.xs),
                 Text(
-                  _isCorrect
+                  isCorrect
                       ? widget.strings('topic.checkCorrect')
                       : widget.strings('topic.checkIncorrect'),
                   style: theme.textTheme.labelLarge,
@@ -181,7 +210,7 @@ class _CheckQuestionCardState extends State<CheckQuestionCard> {
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(question.explanation, style: theme.textTheme.bodyMedium),
-            if (!_isCorrect) ...<Widget>[
+            if (!isCorrect) ...<Widget>[
               const SizedBox(height: AppSpacing.sm),
               Align(
                 alignment: Alignment.centerRight,
@@ -197,14 +226,14 @@ class _CheckQuestionCardState extends State<CheckQuestionCard> {
     );
   }
 
-  _OptionState _stateFor(int index) {
-    if (!_answered) {
+  _OptionState _stateFor(int index, int? selected) {
+    if (selected == null) {
       return _OptionState.idle;
     }
     if (widget.question.isCorrect(index)) {
       return _OptionState.correct;
     }
-    return index == _selected ? _OptionState.wrong : _OptionState.idle;
+    return index == selected ? _OptionState.wrong : _OptionState.idle;
   }
 }
 

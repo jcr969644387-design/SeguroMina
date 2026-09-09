@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/flow/app_flow_controller.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
@@ -24,6 +25,7 @@ class LibraryScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final strings = ref.watch(appStringsProvider).valueOrNull;
     final content = ref.watch(libraryContentProvider);
+    final completed = ref.watch(appFlowProvider).completedTopics;
 
     if (strings == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -51,7 +53,11 @@ class LibraryScreen extends ConsumerWidget {
               _CategoryHeader(category: category, strings: strings),
               const SizedBox(height: AppSpacing.sm),
               for (final topic in category.topics) ...<Widget>[
-                _TopicRow(topic: topic),
+                _TopicRow(
+                  topic: topic,
+                  strings: strings,
+                  completed: completed.contains(topic.id),
+                ),
                 const SizedBox(height: AppSpacing.sm),
               ],
               const SizedBox(height: AppSpacing.lg),
@@ -105,9 +111,15 @@ class _CategoryHeader extends StatelessWidget {
 }
 
 class _TopicRow extends StatelessWidget {
-  const _TopicRow({required this.topic});
+  const _TopicRow({
+    required this.topic,
+    required this.strings,
+    required this.completed,
+  });
 
   final LibraryTopic topic;
+  final AppStrings strings;
+  final bool completed;
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +146,23 @@ class _TopicRow extends StatelessWidget {
                 Text(topic.title, style: theme.textTheme.labelLarge),
                 const SizedBox(height: 2),
                 Text(topic.summary, style: theme.textTheme.bodySmall),
+                if (completed) ...<Widget>[
+                  const SizedBox(height: AppSpacing.xs),
+                  Row(
+                    children: <Widget>[
+                      const Icon(
+                        Icons.check_circle,
+                        size: 14,
+                        color: AppColors.riskLow,
+                      ),
+                      const SizedBox(width: AppSpacing.xs),
+                      Text(
+                        strings('library.completed'),
+                        style: theme.textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),

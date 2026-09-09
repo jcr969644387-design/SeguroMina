@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/l10n/app_strings.dart';
 import '../home/home_screen.dart';
 import '../iperc/iperc_module_screen.dart';
-import '../placeholder/coming_soon_screen.dart';
+import '../profile/profile_screen.dart';
+import '../progress/progress_screen.dart';
 import '../scenarios/scenarios_screen.dart';
 
 /// Contenedor con la navegacion principal.
@@ -44,8 +45,8 @@ class _AppShellState extends ConsumerState<AppShell> {
           HomeScreen(),
           ScenariosScreen(),
           IpercModuleScreen(),
-          ComingSoonScreen(titleKey: 'nav.progress'),
-          ComingSoonScreen(titleKey: 'nav.profile'),
+          ProgressScreen(),
+          ProfileScreen(),
         ],
       ),
       bottomNavigationBar: NavigationBar(
