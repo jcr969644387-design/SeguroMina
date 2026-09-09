@@ -10,6 +10,7 @@ import '../../core/l10n/app_strings.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/widgets/pressable_card.dart';
+import '../iperc/practice/iperc_practice_screen.dart';
 import '../library/library_screen.dart';
 import '../library/topic_screen.dart';
 import '../mission/intro_mission_screen.dart';
@@ -122,6 +123,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               onTopic: (String id) {
                 unawaited(_open(TopicScreen(topicId: id)));
               },
+              onPractice: () => unawaited(_open(const IpercPracticeEntry())),
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
@@ -213,11 +215,13 @@ class _QuickTraining extends StatelessWidget {
     required this.strings,
     required this.onIdentify,
     required this.onTopic,
+    required this.onPractice,
   });
 
   final AppStrings strings;
   final VoidCallback onIdentify;
   final void Function(String topicId) onTopic;
+  final VoidCallback onPractice;
 
   @override
   Widget build(BuildContext context) {
@@ -259,7 +263,7 @@ class _QuickTraining extends StatelessWidget {
               child: _QuickTile(
                 label: strings('home.quick.iperc'),
                 icon: Icons.account_tree_outlined,
-                onTap: () => onTopic('que-es-iperc'),
+                onTap: onPractice,
               ),
             ),
           ],

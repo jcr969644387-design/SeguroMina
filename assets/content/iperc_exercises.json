@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "normativeEdition": "DS-024-2016-EM-ed2026",
+  "validated": false,
+  "exercises": [
+    {
+      "id": "perforacion-labor-subterranea",
+      "activity": "Perforación de frente en labor subterránea",
+      "context": "Galería de avance del nivel 340. El techo del frente muestra fracturas visibles y el último tramo sostenido queda 6 m atrás. Se perfora con un jumbo electrohidráulico alimentado por cable desde el tablero de la labor. La ventilación auxiliar está operativa. Hace dos meses se registró un desprendimiento de rocas en este mismo nivel. Turno de noche.",
+      "primaryHazardId": "caida-rocas",
+      "hazards": [
+        {
+          "id": "caida-rocas",
+          "label": "Roca fracturada sin sostenimiento en el techo",
+          "present": true,
+          "explanation": "El techo está fracturado y el sostenimiento queda 6 m atrás. Es el peligro dominante de la labor y el que decide si la tarea puede ejecutarse."
+        },
+        {
+          "id": "ruido",
+          "label": "Ruido de la perforación",
+          "present": true,
+          "explanation": "La perforación en labor confinada supera con holgura los niveles de exposición admisibles. Que sea un daño acumulativo y no inmediato no lo saca del IPERC."
+        },
+        {
+          "id": "polvo",
+          "label": "Polvo respirable de la perforación",
+          "present": true,
+          "explanation": "La perforación genera partículas de sílice. En una labor subterránea la exposición es continua durante todo el turno."
+        },
+        {
+          "id": "energia-electrica",
+          "label": "Energía eléctrica del cable de alimentación",
+          "present": true,
+          "explanation": "El jumbo es electrohidráulico y se alimenta por cable desde el tablero. Hay conductores energizados en la labor."
+        },
+        {
+          "id": "partes-moviles",
+          "label": "Partes móviles del jumbo",
+          "present": true,
+          "explanation": "Los brazos y la corredera del jumbo generan puntos de atrapamiento y aplastamiento mientras el equipo opera."
+        },
+        {
+          "id": "gases-diesel",
+          "label": "Gases de combustión de equipo diésel",
+          "present": false,
+          "explanation": "El equipo de esta labor es eléctrico, no diésel. Copiar este peligro de otro IPERC es el error más común: se arrastran peligros que no corresponden a las condiciones reales."
+        },
+        {
+          "id": "caida-distinto-nivel",
+          "label": "Caída de personas a distinto nivel",
+          "present": false,
+          "explanation": "La tarea se ejecuta a nivel de piso y no hay piques ni plataformas abiertas descritas. Marcar peligros que no están presentes diluye la atención sobre los que sí lo están."
+        }
+      ],
+      "riskOptions": [
+        {
+          "label": "Caída de rocas",
+          "correct": false,
+          "explanation": "Nombra el evento, pero no dice a quién alcanza ni con qué consecuencia. Sin eso no se puede evaluar la severidad."
+        },
+        {
+          "label": "Caída de roca desde el techo sobre el perforista que opera en el frente, con consecuencia de lesión grave o mortal",
+          "correct": true,
+          "explanation": "Contiene las tres cosas que hacen falta para evaluar: qué se libera, sobre quién y con qué consecuencia."
+        },
+        {
+          "label": "Techo fracturado sin sostenimiento",
+          "correct": false,
+          "explanation": "Eso es el peligro, no el riesgo. El riesgo es lo que le puede ocurrir a una persona expuesta a ese peligro."
+        },
+        {
+          "label": "Golpeado por roca",
+          "correct": false,
+          "explanation": "Describe el tipo de contacto, que sirve para clasificar un accidente ya ocurrido. Para el IPERC falta quién está expuesto y cuál es la consecuencia."
+        }
+      ],
+      "expectedSeverity": "mortalidad",
+      "expectedProbability": "haSucedido",
+      "assessmentRationale": "Severidad Mortalidad: una roca desprendida del techo sobre una persona produce una fatalidad, no una lesión recuperable. Probabilidad Ha sucedido: el techo está fracturado, el sostenimiento queda 6 m atrás y hace dos meses hubo un desprendimiento en el mismo nivel. El cruce da índice 5, nivel Alto, con plazo de corrección de 0 a 24 horas. Mientras el riesgo sea Alto, la labor no se opera.",
+      "controls": [
+        {
+          "id": "desatado",
+          "label": "Desatado de rocas con barretilla desde zona segura antes de ingresar al frente",
+          "level": "eliminacion",
+          "recommended": true,
+          "explanation": "Retira físicamente la roca suelta: elimina el peligro puntual en vez de protegerse de él. Por eso encabeza la jerarquía en esta tarea."
+        },
+        {
+          "id": "sostenimiento",
+          "label": "Sostenimiento con pernos y malla según el estándar del nivel",
+          "level": "ingenieria",
+          "recommended": true,
+          "explanation": "Solución física que retiene el macizo y protege a todo el que entre a la labor, sin depender de la conducta de nadie."
+        },
+        {
+          "id": "cabina-fops",
+          "label": "Operar desde la cabina del jumbo con protección contra caída de objetos",
+          "level": "ingenieria",
+          "recommended": true,
+          "explanation": "Interpone una barrera física entre la roca y el operador durante la perforación. Complementa al sostenimiento, no lo sustituye."
+        },
+        {
+          "id": "senalizacion",
+          "label": "Señalizar y restringir el paso al tramo hasta completar el sostenimiento",
+          "level": "administrativo",
+          "recommended": true,
+          "explanation": "Impide que otros trabajadores entren en la zona mientras el riesgo sigue siendo Alto. Es complemento de los controles físicos, no reemplazo."
+        },
+        {
+          "id": "capacitacion",
+          "label": "Capacitar al personal en riesgos de caída de rocas",
+          "level": "administrativo",
+          "recommended": false,
+          "explanation": "Sin decir en qué, quién y cuándo, no es verificable ni cambia nada en la labor esta noche. La capacitación sostiene el sistema, pero no es el control de este riesgo."
+        },
+        {
+          "id": "casco",
+          "label": "Uso de casco de seguridad",
+          "level": "epp",
+          "recommended": false,
+          "explanation": "El casco es obligatorio y se usa siempre, pero no es un control para este riesgo: no detiene una roca desprendida del techo. Registrarlo como control principal deja el peligro intacto."
+        },
+        {
+          "id": "precaucion",
+          "label": "Indicar al personal que transite con precaución por el frente",
+          "level": "administrativo",
+          "recommended": false,
+          "explanation": "No es un control: es una intención. No se puede verificar ni asignar a un responsable con un plazo."
+        }
+      ],
+      "expectedResidualSeverity": "mortalidad",
+      "expectedResidualProbability": "raroQueSuceda",
+      "residualRationale": "La severidad sigue siendo Mortalidad. El desatado y el sostenimiento hacen mucho menos probable que la roca caiga, pero si cae, la consecuencia no cambia. La probabilidad baja a Raro que suceda con los controles implementados y verificados. El cruce da índice 12, nivel Medio: la tarea puede ejecutarse. Reducir también la severidad daría un residual falsamente tranquilizador."
+    }
+  ]
+}

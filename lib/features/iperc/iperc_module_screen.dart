@@ -11,6 +11,7 @@ import '../../data/library/library_repository.dart';
 import '../../domain/library/library_content.dart';
 import '../../domain/training/risk_level.dart';
 import '../library/topic_screen.dart';
+import 'practice/iperc_practice_screen.dart';
 import '../library/widgets/technical_diagrams.dart';
 
 /// Modulo IPERC.
@@ -66,6 +67,8 @@ class IpercModuleScreen extends ConsumerWidget {
           RiskMatrixDiagram(strings: strings),
           const SizedBox(height: AppSpacing.sm),
           const _DeadlineTable(),
+          const SizedBox(height: AppSpacing.lg),
+          _PracticeCta(strings: strings),
           const SizedBox(height: AppSpacing.lg),
           if (category != null) ...<Widget>[
             Text(
@@ -202,6 +205,65 @@ class _TopicRow extends StatelessWidget {
             Icons.chevron_right,
             size: 20,
             color: AppColors.textSecondary,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Llamada al ejercicio guiado.
+///
+/// Va justo despues de la matriz: leer como se evalua y aplicarlo son dos
+/// cosas distintas, y la segunda es la que fija la primera.
+class _PracticeCta extends StatelessWidget {
+  const _PracticeCta({required this.strings});
+
+  final AppStrings strings;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.primary,
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            strings('practice.cta'),
+            style: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            strings('practice.ctaBody'),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: Colors.white.withValues(alpha: 0.88),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              onPressed: () {
+                unawaited(
+                  Navigator.of(context).push<void>(
+                    MaterialPageRoute<void>(
+                      builder: (context) => const IpercPracticeEntry(),
+                    ),
+                  ),
+                );
+              },
+              style: FilledButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: AppColors.primary,
+              ),
+              child: Text(strings('practice.title')),
+            ),
           ),
         ],
       ),

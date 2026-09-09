@@ -134,6 +134,23 @@ class AppFlowController extends Notifier<AppFlowState> {
     }
   }
 
+  /// Registra el resultado de un ejercicio guiado de IPERC.
+  ///
+  /// Los puntos solo se suman la primera vez, igual que en los escenarios.
+  /// La precision, en cambio, refleja siempre el ultimo intento: es lo que
+  /// permite al estudiante ver si repetir le sirvio de algo.
+  Future<void> completeIpercPractice({required int score}) async {
+    final first = state.ipercAccuracy == AppFlowState.unmeasured;
+    final points = first ? state.points + score : state.points;
+
+    state = state.copyWith(points: points, ipercAccuracy: score);
+
+    await _repository.writeInt(AppFlowKeys.ipercAccuracy, score);
+    if (first) {
+      await _repository.writeInt(AppFlowKeys.points, points);
+    }
+  }
+
   Future<void> hideAcademicNotice() async {
     state = state.copyWith(hidesAcademicNotice: true);
     await _repository.writeBool(AppFlowKeys.hidesNotice, value: true);

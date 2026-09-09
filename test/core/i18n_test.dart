@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:seguromina/domain/iperc/iperc_evaluation.dart';
 import 'package:seguromina/domain/iperc/risk_assessment.dart';
 import 'package:seguromina/domain/progress/trainee_level.dart';
 import 'package:seguromina/domain/training/intro_mission.dart';
@@ -68,6 +69,13 @@ void main() {
     }
   });
 
+  test('existen los textos de los pasos del IPERC guiado', () {
+    for (final step in IpercStep.values) {
+      expectKey(step.labelKey);
+      expectKey('practice.prompt.${step.name}');
+    }
+  });
+
   test('existen los textos de los escenarios del itinerario', () {
     for (final scenario in ScenarioList.scenarios) {
       expectKey(scenario.labelKey);
@@ -126,6 +134,33 @@ void main() {
       'topic.checkCorrect',
       'topic.checkIncorrect',
       'topic.checkAgain',
+      'practice.title',
+      'practice.cta',
+      'practice.ctaBody',
+      'practice.activityTitle',
+      'practice.stepCounter',
+      'practice.check',
+      'practice.next',
+      'practice.finish',
+      'practice.restart',
+      'practice.close',
+      'practice.severityLabel',
+      'practice.probabilityLabel',
+      'practice.levelResult',
+      'practice.summaryTitle',
+      'practice.summaryScore',
+      'practice.lineTitle',
+      'practice.feedback.good',
+      'practice.feedback.review',
+      'practice.feedback.hazards.missed',
+      'practice.feedback.hazards.extra',
+      'practice.feedback.assessment.levelOnly',
+      'practice.feedback.assessment.underestimated',
+      'practice.feedback.controls.onlyPpe',
+      'practice.feedback.controls.noHazardControl',
+      'practice.feedback.controls.missed',
+      'practice.feedback.residual.severityLowered',
+      'practice.feedback.residual.tooOptimistic',
       'iperc.moduleSubtitle',
       'iperc.processTitle',
       'iperc.matrixTitle',
