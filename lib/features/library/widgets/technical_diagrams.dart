@@ -171,9 +171,10 @@ class RiskMatrixDiagram extends StatelessWidget {
       probability: probability,
     );
     final level = RiskMatrix.levelFor(index);
+    final theme = Theme.of(context);
     final selected =
         severity == highlightSeverity && probability == highlightProbability;
-    final style = Theme.of(context).textTheme.bodySmall?.copyWith(
+    final style = theme.textTheme.bodySmall?.copyWith(
       fontWeight: FontWeight.w700,
       color: selected ? Colors.white : null,
     );
