@@ -8,12 +8,15 @@ pubspec.lock
 .vscode/
 *.iml
 .DS_Store
-android/
-ios/
-web/
-macos/
-linux/
-windows/
+# Carpetas de plataforma generadas por flutter create. Ancladas a la raiz
+# con la barra inicial: sin ella el patron coincide con cualquier carpeta
+# de ese nombre a cualquier profundidad, y se tragaba tool/android/.
+/android/
+/ios/
+/web/
+/macos/
+/linux/
+/windows/
 *.g.dart
 *.freezed.dart
 

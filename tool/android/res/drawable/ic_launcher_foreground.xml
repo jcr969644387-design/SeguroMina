@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Capa frontal del icono adaptativo. El trazado es el mismo de
+     assets/brand/seguromina_logo.svg, escalado desde su reticula de 64 a
+     las 108 unidades del icono y centrado dentro de la zona segura de 72. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:scaleX="1.15"
+        android:scaleY="1.15"
+        android:translateX="17.2"
+        android:translateY="15.5">
+        <path
+            android:pathData="M14,9 H50 Q53,9 53,12 V30 C53,44 44,53 32,58 C20,53 11,44 11,30 V12 Q11,9 14,9 Z"
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="5"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <path
+            android:pathData="M15,28 L31,28"
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="5"
+            android:strokeLineCap="round" />
+        <path
+            android:pathData="M33,40 L47,40"
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="5"
+            android:strokeLineCap="round" />
+    </group>
+</vector>
