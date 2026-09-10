@@ -58,9 +58,7 @@ class ScenarioScreen extends ConsumerWidget {
           _SituationCard(scenario: scenario, strings: strings),
           const SizedBox(height: AppSpacing.md),
           Text(
-            state.finished
-                ? scenario.briefing
-                : strings('mission.instruction'),
+            state.finished ? scenario.briefing : strings('mission.instruction'),
             style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: AppSpacing.md),

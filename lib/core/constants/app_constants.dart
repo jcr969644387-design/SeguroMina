@@ -14,8 +14,7 @@ abstract final class AppConstants {
   static const String libraryPath = 'assets/content/library.json';
   static const String ipercExercisesPath =
       'assets/content/iperc_exercises.json';
-  static const String scenariosPath =
-      'assets/content/scenarios/scenarios.json';
+  static const String scenariosPath = 'assets/content/scenarios/scenarios.json';
   static const String scenarioDir = 'assets/content/scenarios';
 
   /// Nombre del archivo de base de datos local.

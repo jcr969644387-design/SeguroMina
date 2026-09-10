@@ -30,6 +30,7 @@ class AppFlowState {
   final bool hasSeenOnboarding;
   final bool hidesAcademicNotice;
   final int points;
+
   /// Escenarios ya superados, por identificador.
   final Set<String> completedScenarios;
 
